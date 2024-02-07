@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<!--
+ // WEBSITE: https://themefisher.com
+ // TWITTER: https://twitter.com/themefisher
+ // FACEBOOK: https://www.facebook.com/themefisher
+ // GITHUB: https://github.com/themefisher/
+-->
+
+<html class="no-js">
+    <head>
+        <!-- Basic Page Needs
+        ================================================== -->
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="icon" href="favicon.ico">
+        <title>Fast Robots | Lab 1</title>
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="author" content="">
+        <!-- Mobile Specific Metas
+        ================================================== -->
+        <meta name="format-detection" content="telephone=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        
+        <!-- Template CSS Files
+        ================================================== -->
+        <!-- Twitter Bootstrs CSS -->
+        <link rel="stylesheet" href="plugins/bootstrap/bootstrap.min.css">
+        <!-- Ionicons Fonts Css -->
+        <link rel="stylesheet" href="plugins/ionicons/ionicons.min.css">
+        <!-- animate css -->
+        <link rel="stylesheet" href="plugins/animate-css/animate.css">
+        <!-- Hero area slider css-->
+        <link rel="stylesheet" href="plugins/slider/slider.css">
+        <!-- slick slider -->
+        <link rel="stylesheet" href="plugins/slick/slick.css">
+        <!-- Fancybox -->
+        <link rel="stylesheet" href="plugins/facncybox/jquery.fancybox.css">
+        <!-- hover -->
+        <link rel="stylesheet" href="plugins/hover/hover-min.css">
+        <!-- template main css file -->
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+
+<!--
+==================================================
+Global Page Section Start
+================================================== -->
+<section class="global-page-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="block">
+          <h2>Lab 1: The Artemis Board and Bluetooth</h2>
+          <div class="portfolio-meta">
+            <span>Jan 31, 2024</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--/#Page header-->
+
+<!-- work details part start -->
+<section class="work-single">
+    <div class="row">
+      <div class="col-lg-9">
+        <!-- work single Content -->
+        <div class="work-single-content" style="text-align: left; margin-left: 29%;">
+            <h3>Part 1) Setting Up The Artemis Board</h3>
+            <h4>Objective</h4>
+            <p>In this part, the aim is to setup and verify some basic functionalities of the Arduino IDE and 
+                the Artemis board. This involves programming the board, using the board LED, transmitting and receiving 
+                serial messages over USB, as well as employing the onboard temperature sensor and Pulse Density Microphone.
+            </p>
+            
+            <h4>Artemis Examples</h4>
+            <p>The setup of the Arduino IDE and the Artemis board went pretty well following the 
+                <a href=“https://learn.sparkfun.com/tutorials/artemis-development-with-arduino?_ga”>
+                Sparkfun Setup Instructions</a>. Other documents related to the Artemis board 
+                can be found <a href=“https://www.sparkfun.com/products/15443”>here</a>.
+            </p>
+
+                <h5>Blinky</h5>
+                <p>The initial step is the most classic test: blinking the onboard LED. This serves as a reliable benchmark
+                    to verify the correct installation of the core and the ability to upload code to the board. The video below 
+                    shows the LED blinking periodically.<br>
+                    <iframe width="540" height="280" src="https://youtu.be/1yNT8sRyhrk
+                            autoplay=0&mute=1">
+                    </iframe>
+                </p>
+
+                <h5>Serial Communications</h5>
+                <p>This example includes sending and receving messages via UART ports. The following video demonstrates 
+                    the Artemis receiving user input through the serial interface and echoing it back to the serial monitor.<br>
+                    <iframe width="540" height="280" src="https://youtu.be/lS5mc3XtJsw
+                            autoplay=0&mute=1">
+                    </iframe>
+                </p>
+
+                <h5>Temperature Sensor</h5>
+                <p>This piece of example code from File->Examples->Apollo3->Example02_AnalogRead works for testing the 
+                    functionality of the onboard temperature sensor. As shown in the following video, placing a finger on the board
+                    for a while and then removing the finger causes the temperature reading to gradually decrease from around 33900 
+                    to approximately 33500. This indicates that the temperature sensor is operating normally.<br>
+                    <iframe width="540" height="280" src="https://youtu.be/LFKtgMNbv-s
+                            autoplay=0&mute=1">
+                    </iframe>
+                </p>
+
+                <h5>Microphone</h5>
+                <p>This example code was run for testing the functionality of the onboard microphone. The video below demonstrates that
+                    the loudest frequency of the current ambient sound is continuously outputted to the serial monitor. When whistling towards 
+                    the board, this reading changes with the pitch correspondingly, showing that the microphone is functioning correctly.<br>
+                    <iframe width="540" height="280" src="https://youtu.be/VumhNgM023c
+                            autoplay=0&mute=1">
+                    </iframe>
+                </p>
+
+                <h5>Additional Task: Musical Note "A" Recognizer</h5>
+                <p>By combining the above features of blinking LED and the microphone functionality, a small application for recognizing 
+                    the musical note "A" has been developed. As demonstrated in the following video, when the note "A4" (440Hz) is played 
+                    near the Artemis, the onboard LED lights up, and it remains off otherwise.<br>
+                    <iframe width="540" height="280" src="https://youtu.be/-dWyOfYFd74
+                            autoplay=0&mute=1">
+                    </iframe><br>
+                    The microphone example code already detects the loudest frequency of surrounding sounds, so the desired functionality 
+                    can be achieved simply by incorporating the LED controls when the loudest frequency falls within the acceptable error range 
+                    of the frequency corresponding to note "A4". Below is a snippet of the code:<br>
+                    <script src="https://gist.github.com/kx-74/8922661408dbf32607c092514513bd28.js"></script>
+                </p>
+            <br>
+            <br>
+
+
+            <h3>Part 2) Bluetooth Connection</h3>
+            <h4>Objective</h4>
+            <p>The objective of this part is to set up connections between the computer and the Artemis board 
+                via Bluetooth Low Energy (BLE). On the computer side, Python within a Jupyter notebook is used, 
+                while on the Artemis side, the Arduino programming language is employed, both combined together 
+                for establishing the communication. A framework is set up for transmitting data through Blutetooth, 
+                which will be benificial for subsequent lab sessions in debugging and interacting with the robot.
+            </p>
+
+            <h4>Prelab</h4>
+            <p>It is beneficial for a Python project to have a virtual environment to isolate the Python interpreter, 
+                libraries and scripts from other files and libraries on the computer. A virtual environment named 
+                "FastRobots_ble" has been created for this purpose, while all Python code in the codebase is placed within 
+                this environment and executed with Jupyter. Besides, the Arduino IDE and the ArduinoBLE library are installed.<br><br>
+
+                Running the provided basecode <b>ble_arduino.ino</b> outputs the MAC address of the Artemis board, as shown below.<br>
+                <img src="images/portfolio/lab1/MAC_address.jpg" alt="MAC address" width="500" class="center"><br><br>
+                A new BLEService Universally Unique Identifier (UUID) is also generated as shown in the following image:<br>
+                <img src="images/portfolio/lab1/UUID_generation.jpg" alt="UUID" width="400" class="center"><br><br>
+                The above values are updated into the configuration files and the arduino code for the computer to recognize the Artemis board.<br><br>
+            
+                Understanding the provided codebase and BLE operation between the computer and the Artemis is crucial. 
+                The BLE service on the Artemis board is initiated based on UUID matching. Once a stable BLE connection is established, 
+                with the relevant libraries imported, users can invoke functions on the Jupyter end 
+                to send commands. The Artemis end responds accordingly to the received information, including but not limited to 
+                parsing commands and manipulating character arrays. Users can also enhance the interactivity of the Artemis board by modifying the 
+                case conditions within <i><b>handle_commands()</b></i> and the corresponding enum variables. 
+            </p>
+            <br>
+
+            <h4>Lab Tasks</h4><br>
+                <h5>ECHO</h5>
+                <p>The Artemis board was programmed to augment the received message and send the result back to the computer, as demonstrated below:<br>
+                    <img src="images/portfolio/lab1/ECHO.jpg" alt="" width="300" class="center"><br><br>
+                    This feature was achieved by making the following modifications in case <i><b>ECHO</b></i> of <i><b>handle_commands()</b></i> on the Arduino end:
+                    <script src="https://gist.github.com/kx-74/8c09431c6172cdc4f4b9276013f504a4.js"></script>
+                    Notably, we have adopted a maximum characteristic value length of 150 bytes. However, with the ECHO command, 
+                    it is possible that the message received by the Artemis does not exceed this limit while the augmented message does. 
+                    To bolster system robustness, logic for checking the characteristic length and outputing error messages was added.
+                </p>
+                
+                <h5>GET_TIME_MILLIS</h5>
+                <p>A command <b>GET_TIME_MILLIS</b> was introduced, prompting the robot to get the current time in milliseconds and respond by 
+                    writing a string such as "T:123456" to the string characteristic, as shown below.<br>
+                    <img src="images/portfolio/lab1/GET_TIME_MILLIS.jpg" alt="" width="300" class="center"><br><br>
+                    To incorporate this new command, adjustments were made to the enum variables storing the command names on both the Python and Artemis ends,
+                    and a new case with the same name was added to the <i><b>handle_commands()</b></i> function. The code snippet is as follows:
+                    <script src="https://gist.github.com/kx-74/82aedae68e2aac346c7b20d9caee29b8.js"></script>
+                </p>
+
+                <h5>Notification Handler</h5>
+                <p>A callback function is of great use in this scenario because the computer end might not always be aware of 
+                    how many messages the board has sent. A callback function, in this case a notification handler, enables automatically update of transmission process 
+                    whenever the transmitted message appear to be changed. Also, in this way there is no need for consistently invoking the blocking function 
+                    <i><b>receive_string()</b></i> anymore.
+                    <img src="images/portfolio/lab1/Notification_Handler.jpg" alt="" width="500" class="center"><br>
+                    As shown in the screenshot, the notification handler took a UUID and a bytearray of the characteristic value 
+                    as parameters, and was put into the start_notify function to be activated. The message sent from the Artemis was automatically extracted and printed 
+                    by the notification handler.
+                </p>
+
+                <h5>Effective Data Transfer Rate</h5>
+                <p><script src="https://gist.github.com/kx-74/31e21c1066f4538cb8efe98a0f268542.js"></script>
+                    To calculate the effective data transfer rate, a new command <b>GET_TIME_MILLIS_LOOP</b> was introduced, 
+                    in case of which the Artemis gets the current time in milliseconds for 1000 times. On the Python end, the notification handler notifies the 
+                    messages and store them in an array, as shown below. <br>
+                    <img src="images/portfolio/lab1/GET_TIME_MILLIS_LOOP.jpg" alt="" width="500" class="center"><br>
+                    <img src="images/portfolio/lab1/GET_TIME_MILLIS_LOOP_2.jpg" alt="" width="500" class="center"><br>
+                    Each messages consisted of 9 characters, translating to 9 bytes. The effective data transfer rate could be determined by multiplying the number of messages 
+                    by the message size and dividing by the total transmission time. In this case, the result is approximately 311 bytes per second. <br>
+                    <img src="images/portfolio/lab1/data_transfer_rate.jpg" alt="" width="600" class="center"><br>
+                </p>
+
+                <h5>Storing before Sending: SEND_TIME_DATA</h5>
+                <p>In the previous task, the strategy was to send the data over BLE immediately upon getting each time stamp. Instead, <b>GET_TIME_MILLIS_LOOP</b> 
+                    was modified to store the time stamps in an array; a new command, <b>SEND_TIME_DATA</b> was introduced for looping through the array and sending the data points. 
+                    The array length and loop count were manually set to 1000, ensuring sufficient coverage to reflect the average data transmission rate. After the stored time stamps 
+                    had been sent, the current time in milliseconds was transmitted for calculating the total time the whole process took.
+                    Below are the pseudo code and the results.<br>
+                    <script src="https://gist.github.com/kx-74/ca9ed22ecd41910dd764af9146dbcd4d.js"></script>
+                    <img src="images/portfolio/lab1/SEND_TIME_DATA.jpg" alt="" width="500" class="center"><br>
+                </p>
+
+                <h5>GET_TEMP_READINGS</h5>
+                <p><script src="https://gist.github.com/kx-74/2e1bab72b4a78323fab24f75b51b2fe7.js"></script><br>
+                    A second array was created to store temperature readings, matching the size of the time stamp array. A <b>GET_TEMP_READINGS</b> command was added 
+                    to loop through both arrays concurrently, transmitting each temperature reading with its corresponding time stamp.The notification handler parsed the 
+                    received strings and populated the data into two seperate lists, as shown below:<br>
+                    <img src="images/portfolio/lab1/GET_TEMP_READINGS.jpg" alt="" width="500" class="center"><br>
+                </p>
+
+                <h5>Discussion</h5>
+                <p>Comparing the above two methods, it took 29 seconds to transmit 9000 bytes using one approach and 32 seconds to transmit 9009
+                    bytes using the other, so the speed difference was not significant. The main difference was about how data was acquired and
+                    transmitted. For the method where data took turns to be acquired and transmitted, there's a noticeable gap between adjacent
+                    timestamps. In contrast, for the method where data was first stored and then transmitted, many identical timestamps were
+                    stored in the array. In this case, the data acquisition process was not blocked by transmission, allowing multiple calls to
+                    the <i><b>millis()</b></i> function within a millisecond. 
+                    <br><br>
+                    The latter method could record between 20 and 60 times per millisecond according to the transmitted data. The advantage of this approach 
+                    is the ability to record information at a high frequency, while the downside is that it may not deliver information to the computer immediately. 
+                    On the other hand, the advantage of the other approach is that the data received by the computer is relatively real-time, but it may come at a lower
+                    frequency. If the robot is used to check environmental quality, it can first collect data at a high frequency and store it. 
+                    However, if it's used for real-time monitoring, it should transmit data in real-time at a lower frequency to provide possibility of instant feedback. 
+                </p>
+
+                <h5>Additional Task: Effective Data Rate and Overhead</h5>
+                <p>To compare the impact of different message lengths on the effective data transfer rate, a <b>SEND_MESSAGES</b> command was
+                    introduced. Depending on the command string parameter, two different responses were hardcoded within the case, each looped
+                    a certain number of times, as shown in the pseudo code below:<br>
+                    <script src="https://gist.github.com/kx-74/6e5d03f95a57a21a0eb9057b311389b4.js"></script><br>
+                    <img src="images/portfolio/lab1/Additional.jpg" alt="" width="400" class="center"><br>
+                    <img src="images/portfolio/lab1/Additiona_2.jpg" alt="" width="400" class="center"><br>
+                    From the screenshot above, it can be observed that in the case of sending short messages, 5000 bytes were transmitted in 51
+                    seconds, resulting in a data transfer rate of approximately 100 bytes per second. On the other hand, when sending long
+                    messages, 4800 bytes were transmitted in 8 seconds, resulting in a significantly higher data transfer rate of
+                    approximately 600 bytes per second.<br><br>
+                    An attempt was made to write a generic case for iterating and testing the transmission of messages with varying lengths
+                    by extracting specific characters from the command. However, repeated disconnection issues happened with the
+                    Artemis when executing the function. Therefore, similar to the cases of 5-byte and 120-byte messages, the
+                    corresponding scenarios were hardcoded. The summarized results are presented in the graph below:
+                    <img src="images/portfolio/lab1/graph.jpg" alt="" width="400" class="center"><br>
+                    It can be clearly observed that short packets introduce a lot of overhead while larger replies help to reduce it.
+                </p>
+
+                <h5>Additional Task: Reliability</h5>
+                <p>The reliability of the system was tested by transmitting the data at a higher rate. The time inverval between transmitting 
+                    floats was adjusted from 1000 to 1, and not a single message was missed, as shown below.<br>
+                    <iframe width="540" height="280" src="https://youtu.be/RmBw2X9oCp0
+                            autoplay=0&mute=1">
+                    </iframe><br>
+                </p>
+
+            <h4>Discussion & Conclusion</h4>
+            <p>In this lab, I learned to effectively use Jupyter for interacting with live code. I also had my first encounter with the 
+                Bluetooth Low Energy, which I believe will facilitate my future projects. During the lab, I encountered several instances 
+                where the output of the Python code did not match my expectations. Eventually it was restarting the IPython kernel that 
+                resolved the issue. This problem may have been caused by repeatedly defining functions - a good thing to bear in mind.
+            </p>
+
+            <h3>References</h3>
+            <p>
+                <a href=“https://fastrobotscornell.github.io/FastRobots/labs/Lab1_new.html”>Lab tutorial</a>
+            </p>
+        </div>
+      </div>
+
+ 	</body>
+</html>
