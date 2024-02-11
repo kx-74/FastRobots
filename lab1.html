@@ -43,7 +43,41 @@
         <!-- template main css file -->
         <link rel="stylesheet" href="css/style.css">
     </head>
-    <body>
+    <body><!--
+    ==================================================
+    Header Section Start
+    ================================================== -->
+    <section class="top-bar animated-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                        <a class="navbar-brand" href="index.html">
+                            <!-- <img class="logo" src="./images/logo.jpg" alt="logo"> -->
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+    
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html">Home
+                                        <span class="sr-only">(current)</span>
+                                    </a>
+                                </li>
+                                <!-- <li class="nav-item">
+                                    <a class="nav-link" href="about.html">About</a>
+                                </li> -->
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
 
 <!--
 ==================================================
@@ -67,10 +101,11 @@ Global Page Section Start
 
 <!-- work details part start -->
 <section class="work-single">
-    <div class="row">
+    <div class="container">
+    <!-- <div class="row mb-4 mx-4 p-5 align-items-center"> -->
       <div class="col-lg-9">
         <!-- work single Content -->
-        <div class="work-single-content" style="text-align: left; margin-left: 29%;">
+        <div class="work-single-content">
             <h3>Part 1) Setting Up The Artemis Board</h3>
             <h4>Objective</h4>
             <p>In this part, the aim is to setup and verify some basic functionalities of the Arduino IDE and 
@@ -79,11 +114,10 @@ Global Page Section Start
             </p>
             
             <h4>Artemis Examples</h4>
-            <p>The setup of the Arduino IDE and the Artemis board went pretty well following the 
-                <a href=“https://learn.sparkfun.com/tutorials/artemis-development-with-arduino?_ga”>
-                Sparkfun Setup Instructions</a>. Other documents related to the Artemis board 
-                can be found <a href=“https://www.sparkfun.com/products/15443”>here</a>.
-            </p>
+            <blockquote>The setup of the Arduino IDE and the Artemis board went pretty well following the
+            <a href=“https://learn.sparkfun.com/tutorials/artemis-development-with-arduino?_ga”>
+                Sparkfun Setup Instructions</a>. Other documents related to the Artemis board
+            can be found <a href=“https://www.sparkfun.com/products/15443”>here</a>.</blockquote>
 
                 <h5>Blinky</h5>
                 <p>The initial step is the most classic test: blinking the onboard LED. This serves as a reliable benchmark
@@ -127,10 +161,10 @@ Global Page Section Start
                     near the Artemis, the onboard LED lights up, and it remains off otherwise.<br>
                     <iframe width="540" height="280" src="https://www.youtube.com/embed/-dWyOfYFd74?si=hoXbNMhxDfKR8V5w
                             autoplay=0&mute=1">
-                    </iframe><br>
+                    </iframe><br><br>
                     The microphone example code already detects the loudest frequency of surrounding sounds, so the desired functionality 
                     can be achieved simply by incorporating the LED controls when the loudest frequency falls within the acceptable error range 
-                    of the frequency corresponding to note "A4". Below is a snippet of the code:<br>
+                    of the frequency corresponding to note "A4". Below is a snippet of the code:
                     <script src="https://gist.github.com/kx-74/8922661408dbf32607c092514513bd28.js"></script>
                 </p>
             <br>
@@ -153,9 +187,9 @@ Global Page Section Start
                 this environment and executed with Jupyter. Besides, the Arduino IDE and the ArduinoBLE library are installed.<br><br>
 
                 Running the provided basecode <b>ble_arduino.ino</b> outputs the MAC address of the Artemis board, as shown below.<br>
-                <img src="images/portfolio/lab1/MAC_address.jpg" alt="MAC address" width="500" class="center"><br><br>
+                <img src="images/portfolio/lab1/MAC_address.jpg" alt="MAC address" style="width: 70%; height: 50%" class="center"><br><br>
                 A new BLEService Universally Unique Identifier (UUID) is also generated as shown in the following image:<br>
-                <img src="images/portfolio/lab1/UUID_generation.jpg" alt="UUID" width="400" class="center"><br><br>
+                <img src="images/portfolio/lab1/UUID_generation.jpg" alt="UUID" style="width: 50%; height: 50%" class="center"><br><br>
                 The above values are updated into the configuration files and the arduino code for the computer to recognize the Artemis board.<br><br>
             
                 Understanding the provided codebase and BLE operation between the computer and the Artemis is crucial. 
@@ -170,7 +204,7 @@ Global Page Section Start
             <h4>Lab Tasks</h4><br>
                 <h5>ECHO</h5>
                 <p>The Artemis board was programmed to augment the received message and send the result back to the computer, as demonstrated below:<br>
-                    <img src="images/portfolio/lab1/ECHO.jpg" alt="" width="300" class="center"><br><br>
+                    <img src="images/portfolio/lab1/ECHO.jpg" alt="" style="width: 50%; height: 50%" class="center"><br><br>
                     This feature was achieved by making the following modifications in case <i><b>ECHO</b></i> of <i><b>handle_commands()</b></i> on the Arduino end:
                     <script src="https://gist.github.com/kx-74/8c09431c6172cdc4f4b9276013f504a4.js"></script>
                     Notably, we have adopted a maximum characteristic value length of 150 bytes. However, with the ECHO command, 
@@ -181,7 +215,7 @@ Global Page Section Start
                 <h5>GET_TIME_MILLIS</h5>
                 <p>A command <b>GET_TIME_MILLIS</b> was introduced, prompting the robot to get the current time in milliseconds and respond by 
                     writing a string such as "T:123456" to the string characteristic, as shown below.<br>
-                    <img src="images/portfolio/lab1/GET_TIME_MILLIS.jpg" alt="" width="300" class="center"><br><br>
+                    <img src="images/portfolio/lab1/GET_TIME_MILLIS.jpg" alt="" style="width: 50%; height: 50%" class="center"><br><br>
                     To incorporate this new command, adjustments were made to the enum variables storing the command names on both the Python and Artemis ends,
                     and a new case with the same name was added to the <i><b>handle_commands()</b></i> function. The code snippet is as follows:
                     <script src="https://gist.github.com/kx-74/82aedae68e2aac346c7b20d9caee29b8.js"></script>
@@ -191,8 +225,8 @@ Global Page Section Start
                 <p>A callback function is of great use in this scenario because the computer end might not always be aware of 
                     how many messages the board has sent. A callback function, in this case a notification handler, enables automatically update of transmission process 
                     whenever the transmitted message appear to be changed. Also, in this way there is no need for consistently invoking the blocking function 
-                    <i><b>receive_string()</b></i> anymore.
-                    <img src="images/portfolio/lab1/Notification_Handler.jpg" alt="" width="500" class="center"><br>
+                    <i><b>receive_string()</b></i> anymore.<br>
+                    <img src="images/portfolio/lab1/Notification_Handler.jpg" alt="" style="width: 50%; height: 50%" class="center"><br>
                     As shown in the screenshot, the notification handler took a UUID and a bytearray of the characteristic value 
                     as parameters, and was put into the start_notify function to be activated. The message sent from the Artemis was automatically extracted and printed 
                     by the notification handler.
@@ -203,11 +237,11 @@ Global Page Section Start
                     To calculate the effective data transfer rate, a new command <b>GET_TIME_MILLIS_LOOP</b> was introduced, 
                     in case of which the Artemis gets the current time in milliseconds for 1000 times. On the Python end, the notification handler notifies the 
                     messages and store them in an array, as shown below. <br>
-                    <img src="images/portfolio/lab1/GET_TIME_MILLIS_LOOP.jpg" alt="" width="500" class="center"><br>
-                    <img src="images/portfolio/lab1/GET_TIME_MILLIS_LOOP_2.jpg" alt="" width="500" class="center"><br>
+                    <img src="images/portfolio/lab1/GET_TIME_MILLIS_LOOP.jpg" alt="" style="width: 60%; height: 50%"><br>
+                    <img src="images/portfolio/lab1/GET_TIME_MILLIS_LOOP_2.jpg" alt="" style="width: 60%; height: 50%"><br><br>
                     Each messages consisted of 9 characters, translating to 9 bytes. The effective data transfer rate could be determined by multiplying the number of messages 
                     by the message size and dividing by the total transmission time. In this case, the result is approximately 311 bytes per second. <br>
-                    <img src="images/portfolio/lab1/data_transfer_rate.jpg" alt="" width="600" class="center"><br>
+                    <img src="images/portfolio/lab1/data_transfer_rate.jpg" alt="" style="width: 70%; height: 50%"><br><br>
                 </p>
 
                 <h5>Storing before Sending: SEND_TIME_DATA</h5>
@@ -217,15 +251,15 @@ Global Page Section Start
                     had been sent, the current time in milliseconds was transmitted for calculating the total time the whole process took.
                     Below are the pseudo code and the results.<br>
                     <script src="https://gist.github.com/kx-74/ca9ed22ecd41910dd764af9146dbcd4d.js"></script>
-                    <img src="images/portfolio/lab1/SEND_TIME_DATA.jpg" alt="" width="500" class="center"><br>
+                    <img src="images/portfolio/lab1/SEND_TIME_DATA.jpg" alt="" style="width: 70%; height: 50%"><br><br>
                 </p>
 
                 <h5>GET_TEMP_READINGS</h5>
-                <p><script src="https://gist.github.com/kx-74/2e1bab72b4a78323fab24f75b51b2fe7.js"></script><br>
+                <p><script src="https://gist.github.com/kx-74/2e1bab72b4a78323fab24f75b51b2fe7.js"></script>
                     A second array was created to store temperature readings, matching the size of the time stamp array. A <b>GET_TEMP_READINGS</b> command was added 
                     to loop through both arrays concurrently, transmitting each temperature reading with its corresponding time stamp.The notification handler parsed the 
                     received strings and populated the data into two seperate lists, as shown below:<br>
-                    <img src="images/portfolio/lab1/GET_TEMP_READINGS.jpg" alt="" width="500" class="center"><br>
+                    <img src="images/portfolio/lab1/GET_TEMP_READINGS.jpg" alt="" style="width: 60%; height: 50%"><br>
                 </p>
 
                 <h5>Discussion</h5>
@@ -247,9 +281,9 @@ Global Page Section Start
                 <p>To compare the impact of different message lengths on the effective data transfer rate, a <b>SEND_MESSAGES</b> command was
                     introduced. Depending on the command string parameter, two different responses were hardcoded within the case, each looped
                     a certain number of times, as shown in the pseudo code below:<br>
-                    <script src="https://gist.github.com/kx-74/6e5d03f95a57a21a0eb9057b311389b4.js"></script><br>
-                    <img src="images/portfolio/lab1/Additional.jpg" alt="" width="400" class="center"><br>
-                    <img src="images/portfolio/lab1/Additiona_2.jpg" alt="" width="400" class="center"><br>
+                    <script src="https://gist.github.com/kx-74/6e5d03f95a57a21a0eb9057b311389b4.js"></script>
+                    <img src="images/portfolio/lab1/Additional.jpg" alt="" style="width: 50%; height: 50%"><br>
+                    <img src="images/portfolio/lab1/Additiona_2.jpg" alt="" style="width: 50%; height: 50%"><br><br>
                     From the screenshot above, it can be observed that in the case of sending short messages, 5000 bytes were transmitted in 51
                     seconds, resulting in a data transfer rate of approximately 100 bytes per second. On the other hand, when sending long
                     messages, 4800 bytes were transmitted in 8 seconds, resulting in a significantly higher data transfer rate of
@@ -258,7 +292,7 @@ Global Page Section Start
                     by extracting specific characters from the command. However, repeated disconnection issues happened with the
                     Artemis when executing the function. Therefore, similar to the cases of 5-byte and 120-byte messages, the
                     corresponding scenarios were hardcoded. The summarized results are presented in the graph below:
-                    <img src="images/portfolio/lab1/graph.jpg" alt="" width="400" class="center"><br>
+                    <img src="images/portfolio/lab1/graph.jpg" alt="" style="width: 50%; height: 50%"><br><br>
                     It can be clearly observed that short packets introduce a lot of overhead while larger replies help to reduce it.
                 </p>
 
@@ -276,13 +310,13 @@ Global Page Section Start
                 where the output of the Python code did not match my expectations. Eventually it was restarting the IPython kernel that 
                 resolved the issue. This problem may have been caused by repeatedly defining functions - a good thing to bear in mind.
             </p>
-
+            
             <h3>References</h3>
             <p>
-                <a href=“https://fastrobotscornell.github.io/FastRobots/labs/Lab1_new.html”>Lab tutorial</a>
+                <a href=“https://fastrobotscornell.github.io/FastRobots/labs/Lab1_new.html”>Lab tutorials</a>
             </p>
         </div>
       </div>
-
+    </div>
  	</body>
 </html>
