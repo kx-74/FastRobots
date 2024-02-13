@@ -1,0 +1,66 @@
+2024-01-31 14:29:59,088 | MainThread   | [DEBUG   ] | <module>            |: debug
+2024-01-31 14:29:59,090 | MainThread   | [INFO    ] | <module>            |: info
+2024-01-31 14:29:59,095 | MainThread   | [WARNING ] | <module>            |: warning
+2024-01-31 14:29:59,097 | MainThread   | [ERROR   ] | <module>            |: error
+2024-01-31 14:29:59,098 | MainThread   | [CRITICAL] | <module>            |: critical
+2024-01-31 14:30:58,059 | MainThread   | [DEBUG   ] | <module>            |: debug
+2024-01-31 14:30:58,059 | MainThread   | [INFO    ] | <module>            |: info
+2024-01-31 14:30:58,061 | MainThread   | [WARNING ] | <module>            |: warning
+2024-01-31 14:30:58,062 | MainThread   | [ERROR   ] | <module>            |: error
+2024-01-31 14:30:58,067 | MainThread   | [CRITICAL] | <module>            |: critical
+2024-01-31 14:31:00,405 | MainThread   | [DEBUG   ] | <module>            |: debug
+2024-01-31 14:31:00,405 | MainThread   | [INFO    ] | <module>            |: info
+2024-01-31 14:31:00,406 | MainThread   | [WARNING ] | <module>            |: warning
+2024-01-31 14:31:00,407 | MainThread   | [ERROR   ] | <module>            |: error
+2024-01-31 14:31:00,409 | MainThread   | [CRITICAL] | <module>            |: critical
+2024-01-31 14:31:18,744 | MainThread   | [DEBUG   ] | <module>            |: debug
+2024-01-31 14:31:18,744 | MainThread   | [INFO    ] | <module>            |: info
+2024-01-31 14:31:18,745 | MainThread   | [WARNING ] | <module>            |: warning
+2024-01-31 14:31:18,747 | MainThread   | [ERROR   ] | <module>            |: error
+2024-01-31 14:31:18,748 | MainThread   | [CRITICAL] | <module>            |: critical
+2024-01-31 14:31:37,622 | MainThread   | [DEBUG   ] | <module>            |: debug
+2024-01-31 14:31:37,622 | MainThread   | [INFO    ] | <module>            |: info
+2024-01-31 14:31:37,624 | MainThread   | [WARNING ] | <module>            |: warning
+2024-01-31 14:31:37,625 | MainThread   | [ERROR   ] | <module>            |: error
+2024-01-31 14:31:37,628 | MainThread   | [CRITICAL] | <module>            |: critical
+2024-01-31 14:31:54,366 | MainThread   | [DEBUG   ] | <module>            |: debug
+2024-01-31 14:31:54,367 | MainThread   | [INFO    ] | <module>            |: info
+2024-01-31 14:31:54,368 | MainThread   | [WARNING ] | <module>            |: warning
+2024-01-31 14:31:54,370 | MainThread   | [ERROR   ] | <module>            |: error
+2024-01-31 14:31:54,371 | MainThread   | [CRITICAL] | <module>            |: critical
+2024-01-31 14:33:23,522 | MainThread   | [DEBUG   ] | <module>            |: debug
+2024-01-31 14:33:23,522 | MainThread   | [INFO    ] | <module>            |: info
+2024-01-31 14:33:23,523 | MainThread   | [WARNING ] | <module>            |: warning
+2024-01-31 14:33:23,525 | MainThread   | [ERROR   ] | <module>            |: error
+2024-01-31 14:33:23,526 | MainThread   | [CRITICAL] | <module>            |: critical
+2024-01-31 14:34:22,785 | MainThread   | [DEBUG   ] | <module>            |: debug
+2024-01-31 14:34:22,786 | MainThread   | [INFO    ] | <module>            |: info
+2024-01-31 14:34:22,786 | MainThread   | [WARNING ] | <module>            |: warning
+2024-01-31 14:34:22,786 | MainThread   | [ERROR   ] | <module>            |: error
+2024-01-31 14:34:22,789 | MainThread   | [CRITICAL] | <module>            |: critical
+2024-01-31 14:35:19,412 | MainThread   | [DEBUG   ] | <module>            |: debug
+2024-01-31 14:35:19,420 | MainThread   | [INFO    ] | <module>            |: info
+2024-01-31 14:35:19,420 | MainThread   | [WARNING ] | <module>            |: warning
+2024-01-31 14:35:19,420 | MainThread   | [ERROR   ] | <module>            |: error
+2024-01-31 14:35:19,424 | MainThread   | [CRITICAL] | <module>            |: critical
+2024-01-31 14:38:04,806 | MainThread   | [DEBUG   ] | __init__            |: Python Info: sys.version_info(major=3, minor=12, micro=1, releaselevel='final', serial=0)
+2024-01-31 14:38:04,807 | MainThread   | [DEBUG   ] | __init__            |: System Info: Windows-10-10.0.19045-SP0
+2024-01-31 14:38:04,809 | MainThread   | [INFO    ] | _connect            |: Looking for Artemis Nano Peripheral Device: c0:89:c5:6d:2f:4b
+2024-01-31 14:39:49,501 | MainThread   | [INFO    ] | exit_handler        |: Exiting...
+2024-01-31 14:39:49,503 | MainThread   | [WARNING ] | exit_handler        |: Could not disconnect before exiting
+2024-01-31 14:39:49,504 | MainThread   | [WARNING ] | exit_handler        |: Not connected to a BLE device
+2024-01-31 14:40:02,800 | MainThread   | [DEBUG   ] | <module>            |: debug
+2024-01-31 14:40:02,804 | MainThread   | [INFO    ] | <module>            |: info
+2024-01-31 14:40:02,805 | MainThread   | [WARNING ] | <module>            |: warning
+2024-01-31 14:40:02,808 | MainThread   | [ERROR   ] | <module>            |: error
+2024-01-31 14:40:02,809 | MainThread   | [CRITICAL] | <module>            |: critical
+2024-01-31 14:40:06,160 | MainThread   | [DEBUG   ] | __init__            |: Python Info: sys.version_info(major=3, minor=12, micro=1, releaselevel='final', serial=0)
+2024-01-31 14:40:06,161 | MainThread   | [DEBUG   ] | __init__            |: System Info: Windows-10-10.0.19045-SP0
+2024-01-31 14:40:06,163 | MainThread   | [INFO    ] | _connect            |: Looking for Artemis Nano Peripheral Device: c0:89:c5:6d:2f:4b
+2024-01-31 14:41:30,192 | MainThread   | [INFO    ] | _connect            |: Looking for Artemis Nano Peripheral Device: c0:89:c5:6d:2f:4b
+2024-01-31 14:41:36,011 | MainThread   | [INFO    ] | _connect            |: Connected to c0:89:c5:6d:2f:4b
+2024-01-31 14:45:45,957 | MainThread   | [INFO    ] | disconnect_handler  |: Disconnected from C0:89:C5:6D:2F:4B
+2024-01-31 14:49:47,784 | MainThread   | [DEBUG   ] | __init__            |: Python Info: sys.version_info(major=3, minor=12, micro=1, releaselevel='final', serial=0)
+2024-01-31 14:49:47,787 | MainThread   | [DEBUG   ] | __init__            |: System Info: Windows-10-10.0.19045-SP0
+2024-01-31 14:49:47,789 | MainThread   | [INFO    ] | _connect            |: Looking for Artemis Nano Peripheral Device: c0:89:c5:6d:2f:4b
+2024-01-31 14:49:52,460 | MainThread   | [INFO    ] | _connect            |: Connected to c0:89:c5:6d:2f:4b
