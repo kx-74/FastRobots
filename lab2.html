@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<!--
+ // WEBSITE: https://themefisher.com
+ // TWITTER: https://twitter.com/themefisher
+ // FACEBOOK: https://www.facebook.com/themefisher
+ // GITHUB: https://github.com/themefisher/
+-->
+
+<html class="no-js">
+    <head>
+        <!-- Basic Page Needs
+        ================================================== -->
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="icon" href="favicon.ico">
+        <title>Fast Robots | Lab 2</title>
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="author" content="">
+        <!-- Mobile Specific Metas
+        ================================================== -->
+        <meta name="format-detection" content="telephone=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        
+        <!-- Template CSS Files
+        ================================================== -->
+        <!-- Twitter Bootstrs CSS -->
+        <link rel="stylesheet" href="plugins/bootstrap/bootstrap.min.css">
+        <!-- Ionicons Fonts Css -->
+        <link rel="stylesheet" href="plugins/ionicons/ionicons.min.css">
+        <!-- animate css -->
+        <link rel="stylesheet" href="plugins/animate-css/animate.css">
+        <!-- Hero area slider css-->
+        <link rel="stylesheet" href="plugins/slider/slider.css">
+        <!-- slick slider -->
+        <link rel="stylesheet" href="plugins/slick/slick.css">
+        <!-- Fancybox -->
+        <link rel="stylesheet" href="plugins/facncybox/jquery.fancybox.css">
+        <!-- hover -->
+        <link rel="stylesheet" href="plugins/hover/hover-min.css">
+        <!-- template main css file -->
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body><!--
+    ==================================================
+    Header Section Start
+    ================================================== -->
+    <section class="top-bar animated-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                        <a class="navbar-brand" href="index.html">
+                            <!-- <img class="logo" src="./images/logo.jpg" alt="logo"> -->
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+    
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html">Home
+                                        <span class="sr-only">(current)</span>
+                                    </a>
+                                </li>
+                                <!-- <li class="nav-item">
+                                    <a class="nav-link" href="about.html">About</a>
+                                </li> -->
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!--
+==================================================
+Global Page Section Start
+================================================== -->
+<section class="global-page-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="block">
+          <h2>Lab 2: IMU Sensor</h2>
+          <div class="portfolio-meta">
+            <span>Feburary 7, 2024</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--/#Page header-->
+
+<!-- work details part start -->
+<section class="work-single">
+    <div class="container">
+      <div class="col-lg-9">
+        <!-- work single Content -->
+        <div class="work-single-content">
+            <h4>Objective</h4>
+            <p>The aim of this lab is to connect the Inertial Measurement Unit (IMU) to the Artemis board, and to characterize the capabilities of the sensor.
+            </p>
+
+            <h4>Lab Tasks</h4>
+                <h5>IMU Setup</h5>
+                <p>The IMU sensor was connected to the Artemis board via the I2C communication protocol as shown in the figure below. 
+                    The orientation of the sensor's coordinate system is indicated on the diagram.<br>
+                    <img src="images/portfolio/lab2/IMU_connection.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+                    
+                    The example code (<a href=“https://github.com/sparkfun/SparkFun_ICM-20948_ArduinoLibrary/blob/main/examples/Arduino/Example1_Basics/Example1_Basics.ino”>SparkFun Example1_Basics</a>) 
+                    was executed to verify the normal operation of the sensor. Note that in the example code, AD0_VAL is defined to be 1 as default, 
+                    which sets the last bit of the I2C address of this device to 1. However, in our case, as the ADR jumper is not closed, 
+                    the value of AD0_VAL was adjusted to 0 to ensure correct recognition of the sensor. <br><br>
+
+                    To visually confirm the IMU's functionality, slight modifications were made to the example code's serial output format
+                    to enable compatibility with the Better Serial Plotter, and the plots are demonstrated in the video below. The upper plot displays
+                    the accelerometer readings in XYZ directions, while the lower plot shows the gyroscope readings. <br>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/_-7mWucNS7w?si=m8qpOYisQ52vRi_4"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                    </iframe><br><br>
+
+                    When slowly rotating the IMU on a plane perpendicular to the Z-axis, noticeable fluctuations are observed in the accelerometer readings along the X and Y axes,
+                    whereas gyroscope readings remain relatively stable; when rotating rapidly, the accelerometer readings show larger fluctuations,
+                    reflecting significant angular changes, as the accelerometer values reflect the decomposition of gravitational acceleration 'g' within 
+                    the sensor's own coordinate system. The gyroscope readings also show noticeable variations, which is due to their measurement of the angular velocity 
+                    while rotating.
+                </p>
+
+                <h5>Accelerometer</h5>
+                <p>To obtain the robot's angle information, the raw accelerometer data generated by the IMU should be processed using the following
+                    formula, where the directions of the angles are shown in the figure below. <br>
+                    <img src="images/portfolio/lab2/acc_formula.jpg" alt="" style="width: 30%; height: 50%"><br>
+                    <img src="images/portfolio/lab2/angle_directions.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+
+                    Note that in this lab, it is assumed the IMU is mounted flat on the robot, so the sensor's z-axis is always
+                    parallel to the direction of gravitational acceleration. Therefore, it is not feasible to calculate the yaw value from accelerometer readings.<br><br>
+                
+                    The accuracy of the accelerometer seems quite good. The table below compares the angles calculated from the accelerometer readings with the actual values of 90, 0, and -90
+                    degrees for roll and pitch, respectively.<br>
+                    <img src="images/portfolio/lab2/acc_accuracy.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+                
+                    The downside with the accelerometer is its high noise level, and Fourier transform can be used to study this problem. By
+                    manually rotating the IMU around the x-axis periodically, the sampled data below shows some higher-frequency noise apart from
+                    the main peak of the low-frequency in the frequency domain, which is also correspondingly observable in the time-domain
+                    signal as the waveform is a little shaky.<br>
+                    <img src="images/portfolio/lab2/acc_roll.jpg" alt="" style="width: 80%; height: 50%"><br><br>
+
+                    In fact, the noise situation is better than expected. After checking the datasheet, it was discovered that the ICM20948
+                    itself has a built-in accelerometer low-pass filter, so the signal may have already been processed. To further reduce
+                    noise, adding another low-pass filter with a lower cutoff frequency could be considered. For this testing case, a cutoff 
+                    frequency of 1Hz was chosen after observing the signal spectrum, and the filtered effect is shown in the figure below. 
+                    As future labs may involve higher-frequency signals when the robot performs stunts, the cutoff frequency should be adjusted accordingly to be higher.<br>
+                    <img src="images/portfolio/lab2/acc_roll_filt.jpg" alt="" style="width: 80%; height: 50%"><br><br>                
+                </p>
+
+                <h5>Gyroscope</h5>
+                <p>Since the gyroscope measures the rate of angular change in degrees per second, the current angle can be calculated using
+                    the following formula.<br>
+                    <img src="images/portfolio/lab2/gyr_formula.jpg" alt="" style="width: 30%; height: 50%"><br><br>
+
+                    The gyroscope measures the rate of angular change (in degrees per second), requiring an initial angle before
+                    calculating angle changes based on this initial value. Here, the accelerometer's angle was chosen for determining the
+                    gyroscope's initial value, which means that if the robot starts on a inclined surface, the gyroscope accumulates angle changes 
+                    from the current angle generated by the accelerometer instead of starting from 0. However, the initial value
+                    for yaw is still set to 0 because the accelerometer is not a reliable source of yaw information, as mentioned earlier.<br><br>
+
+                    The figure below shows a comparison between the output of the gyroscope, accelerometer, and the filtered accelerometer
+                    values for pitch, roll, and yaw when the IMU was put on the lid of a box, which was then repeatedly tapped.<br>
+                    <img src="images/portfolio/lab2/gyr_vs_acc_freq52.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+
+                    The filtered accelerometer values are noticeably smoother compared to the unfiltered values, and the gyro noise is
+                    generally less compared to the unfiltered accelerometer readings. The problem with gyro readings is that the measured angular velocity 
+                    at each moment might be a small nonzero value due to tiny noises. This accumulates over time, causing gyro angles to drift, which can be observed in the graph.<br><br>
+
+                    Delays were introduced into the loop that captures the sensor readings, for inverstigating the impact of sampling frequency on accuracy. 
+                    The resulting figure is demonstrated below. Upon further comparison of the two graphs, the first graph, with a sample rate of 52Hz, 
+                    appears to be more accurate than the second graph, which introduced a delay and resulted in a sample rate of 16Hz. 
+                    However, gyro drifts over time in both cases.<br>
+                    <img src="images/portfolio/lab2/gyr_vs_acc_freq16_delay50.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+
+                    According to the above tests, the accelerometer provides relatively accurate measurements but is more sensitive to noise
+                    and cannot be used for yaw on the lab kit. The gyro, on the other hand, is more resistant to noise but has the fatal
+                    drawback of accumulating drift over time, resulting in increasingly inaccurate angles. To combine the advantages of both
+                    and produce both accurate and stable values, a complementary filter was applied, which is represented by the following
+                    formula:<br>
+                    <img src="images/portfolio/lab2/comp_formula.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+                
+                    The alpha value in the complementary filter determines the reliance on the gyro versus the accelerometer. The cases of
+                    alpha=0.3 and 0.8 were tested, as shown in the graph below:
+                    <img src="images/portfolio/lab2/comp_filter.jpg" alt="" style="width: 80%; height: 50%"><br><br>
+                
+                    It can be seen that both choices of alpha value help reduce the effects of gyro drift, with alpha=0.3 showing greater
+                    resistance to noise. Using this alpha value, the performance of the complementary filter in terms of accuracy and range
+                    is demonstrated in the video below:
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/PZF7dlrjFWU?si=T20M3vbvQeQvLXXi"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                    </iframe><br><br>
+                    
+                    The top plot in the video shows the roll and pitch values after complementary filtering, while the bottom two plots show values from 
+                    accelerometer and gyro, respectively. It can be observed that the complementary filter provides a real-time, stable, and
+                    accurate response to the sensor's angles.
+                </p>
+
+
+                <h5>Sample Data</h5>
+                <p>The fastest sampling rate depends on the capabilities of the IMU and the processing speed of the Artemis. To test this,
+                    three new commands were added: <b>START_RECORD</b>, <b>STOP_RECORD</b>, and <b>GET_ANGLES_RECORDED</b>. The code for grabbing data from the
+                    IMU was placed in the main loop and all prints were removed for reducing delays.<br><br>
+                    
+                    When the user sends <b>START_RECORD</b>, a flag will be raised, and the main loop starts storing angle data and corresponding 
+                    timestamps in seperate arrays. This continues until the arrays are filled or the user sends <b>STOP_RECORD</b>. Note that in every iteration of the 
+                    main loop, instead of waiting for IMU data to be ready, it just moves on to the next iteration if no data is currently available. 
+                    The pseudo code is as follows:<br>
+                    <script src="https://gist.github.com/kx-74/4468e2740f2beb4c3c305167fe69ae8b.js"></script><br>
+
+                    In the Python code, a notification handler was set up to receive data from the Artemis and split it into arrays, as shown
+                    in the code snippet and results below. Data was collected continuously for 5 seconds and transmitted via Bluetooth.<br>
+                    <img src="images/portfolio/lab2/sample_data_code.jpg" alt="" style="width: 80%; height: 50%"><br>
+                    <img src="images/portfolio/lab2/sample_data.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+                    
+                    In this setup, the sampling rate can reach over 250Hz. To explore which is faster between the main loop on the Artemis
+                    and the IMU in producing new values, a variable called "missed_counter" was introduced. Each time the main loop checks
+                    for new IMU data and finds none, the missed_counter will be incremented by 1 to reflect that the IMU missed an opportunity to send
+                    data to the main loop. After executing the command, the value of missed_counter remained 0, 
+                    indicating that the IMU produces new data faster than the main loop runs.
+                </p>
+                
+                <h5>Stunt</h5>
+                <p>The following video showcases stunts performed by the RC car used as the lab kit. Understanding the capabilities and
+                    performance of the car can help establish a baseline expectation for future lab activities.<br>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/-XgLo8K5rFU?si=q9KQh-ShUGPhTUu_"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                    </iframe><br><br>
+
+                    The video demonstrates the RC car's impressive acceleration and rotational speed. After colliding with a wall, 
+                    the RC car is also capable of flipping over and resuming operation. These features may indicate a need for high 
+                    noise resistance in the IMU angle measurements. Additionally, it is important to be cautious with the PID control for
+                    distance, as miscalculations could lead to the RC car crashing into a wall at high speeds and damaging the
+                    attached Artemis and sensors.
+                </p>
+
+            <h4>Discussion & Conclusion</h4>
+            <p>In this experiment, I reviewed the functionality of the IMU, analyzed the strengths and weaknesses of accelerometer and
+                gyroscope measurements, and successfully applied a complementary filter to obtain reliable readings. For this lab
+                and the upcoming one, careful consideration is needed in assembling hardware on the robot. Designing without a
+                definitive answer requires more research and experimentation - I am starting to gain a hang of building a small project from scratch.
+            </p>
+            
+            <h4>References</h3>
+            <p>
+                <a href=“https://fastrobotscornell.github.io/FastRobots/labs/Lab4.html”>Lab tutorials</a><br>
+                <a href=“https://github.com/sparkfun/SparkFun_ICM-20948_ArduinoLibrary”>SparkFun_ICM-20948_ArduinoLibrary</a><br>
+                <a href=“https://invensense.tdk.com/wp-content/uploads/2016/06/DS-000189-ICM-20948-v1.3.pdf”>ICM-20948 Datasheet</a><br>
+                <a href="https://cdn.sparkfun.com/assets/c/8/3/d/2/Apollo3-Blue-SoC-Datasheet.pdf?_gl=1*4s0ocx*_ga*MTAxODQyNTM5My4xNzAzNjUyNjcy*_ga_T369JS7J9N*MTcwNzg5Mzc2OC4xMC4wLjE3MDc4OTM3NjguNjAuMC4w">Apollo3 Datasheet</a><br>
+                <a href="https://www.alphabold.com/fourier-transform-in-python-vibration-analysis/">Fourier Transform In Python</a><br>
+            </p>
+        </div>
+      </div>
+    </div>
+ 	</body>
+</html>
