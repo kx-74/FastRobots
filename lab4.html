@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<!--
+ // WEBSITE: https://themefisher.com
+ // TWITTER: https://twitter.com/themefisher
+ // FACEBOOK: https://www.facebook.com/themefisher
+ // GITHUB: https://github.com/themefisher/
+-->
+
+<html class="no-js">
+    <head>
+        <!-- Basic Page Needs
+        ================================================== -->
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="icon" href="favicon.ico">
+        <title>Fast Robots | Lab 4</title>
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="author" content="">
+        <!-- Mobile Specific Metas
+        ================================================== -->
+        <meta name="format-detection" content="telephone=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        
+        <!-- Template CSS Files
+        ================================================== -->
+        <!-- Twitter Bootstrs CSS -->
+        <link rel="stylesheet" href="plugins/bootstrap/bootstrap.min.css">
+        <!-- Ionicons Fonts Css -->
+        <link rel="stylesheet" href="plugins/ionicons/ionicons.min.css">
+        <!-- animate css -->
+        <link rel="stylesheet" href="plugins/animate-css/animate.css">
+        <!-- Hero area slider css-->
+        <link rel="stylesheet" href="plugins/slider/slider.css">
+        <!-- slick slider -->
+        <link rel="stylesheet" href="plugins/slick/slick.css">
+        <!-- Fancybox -->
+        <link rel="stylesheet" href="plugins/facncybox/jquery.fancybox.css">
+        <!-- hover -->
+        <link rel="stylesheet" href="plugins/hover/hover-min.css">
+        <!-- template main css file -->
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body><!--
+    ==================================================
+    Header Section Start
+    ================================================== -->
+    <section class="top-bar animated-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                        <a class="navbar-brand" href="index.html">
+                            <!-- <img class="logo" src="./images/logo.jpg" alt="logo"> -->
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+    
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html">Home
+                                        <span class="sr-only">(current)</span>
+                                    </a>
+                                </li>
+                                <!-- <li class="nav-item">
+                                    <a class="nav-link" href="about.html">About</a>
+                                </li> -->
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!--
+==================================================
+Global Page Section Start
+================================================== -->
+<section class="global-page-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="block">
+          <h2>Lab 4: Motors and Open Loop Control</h2>
+          <div class="portfolio-meta">
+            <span>Feb 21, 2024</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--/#Page header-->
+
+<!-- work details part start -->
+<section class="work-single">
+    <div class="container">
+    <!-- <div class="row mb-4 mx-4 p-5 align-items-center"> -->
+      <div class="col-lg-9">
+        <!-- work single Content -->
+        <div class="work-single-content">
+            <h4>Objective</h4>
+            <p>The aim of this lab is to test two motor drivers, integrate them into the Artemis board, 
+                and utilize them to drive the two motors of the car. The placement of other components is also finalized. 
+                A open-loop control is then performed through a pre-programmed series of moves.
+            </p>
+            
+            <h4>Prelab</h4>
+            <p><img src="images/portfolio/lab4/wiring.jpg" alt="" style="width: 80%; height: 50%"><br><br>
+                The diagram of the intended connections between the components is shown above. Note that in practice, the two motor drivers
+                are connected in parallel to the same motor power, which is not fully reflected in the diagram due to layout constraints. 
+                Also note that the Artemis and the motor drivers are powered by different batteries, as the motors consume power much
+                more quickly than the Artemis board. Pin 6, 7, 12, 13 are selected as the motor driver's inputs since they support PWM and 
+                are distributed on both sides of the Artemis board to avoid overcrowding the soldering.<br><br>
+
+                Another noteworthy thing is that the two inputs and outputs of each dual motor driver are parallel-coupled, which means 
+                each motor is driven using two channels. This ensures sufficent current is provided to the motor without overheating the chip. 
+                <br><br>
+            </p>
+
+            <h4>Lab Tasks</h4>
+                <h5>Single Motor Testing</h5>
+                <p>Before integrating the motor drivers into the car, it is essential to test their functionality. One motor driver's inputs 
+                    were connected to Artemis pins 12 and 13 as described above, while the outputs were hooked up to
+                    the oscilloscope as shown in the following figure. At this point, the motor was not powered by batteries; 
+                    instead, an external DC power supply was used to make debugging easier. The input voltage was set to 3.7V, the same as 
+                    the battery would supply.
+                    <img src="images/portfolio/lab4/oscilloscope.jpg" alt="" style="width: 70%; height: 50%"><br><br>
+
+                    <script src="https://gist.github.com/kx-74/c678f79844538a788c8f3feeec412de8.js"></script>
+                    The above code snippet was run to generate PWM signals and the display on the oscilloscope is shown below.<br>
+                    <img src="images/portfolio/lab4/pwm.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+
+                    Since <b>analogWrite()</b> accepts a duty cycle value ranging between 0 (always off) and 255 (always on), a value of 100
+                    corresponds to approximately 40% duty cycle, which aligns correctly with the channel 2 waveform in the figure. On the other hand, 
+                    channel 1 displays the output signal corresponding to pin 13, which is indeed set to a 0% duty cycle as intended.<br><br>
+
+                    Once the basic functionality was confirmed, the outputs of this motor driver were connected to both ends of a single
+                    motor, which was then powered by a battery. Running the following code results in the behavior shown in the video, where 
+                    the wheels on one side of the car can rotate in both directions at varying speeds, as controlled.<br>
+                    <script src="https://gist.github.com/kx-74/20ad46211166ec2583e23c0766660f56.js"></script>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/CrN_kSbqb0s?si=8F-xy1_j1fk0UZWn"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                    </iframe><br>
+                </p>
+
+                <h5>Double Motor Testing</h5>
+                <p>The same process was repeated for the second motor and motor driver, with the motor inputs connecting to Artemis pins 6 and 7. 
+                    With a 850mAh battery powering both motor drivers, the following code snippet resulted in the expected behavior shown in the video.<br>
+                    <script src="https://gist.github.com/kx-74/df39ba6fb0fd290d444f142c952a177f.js"></script>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/KccDWkWAako?si=AIG19QHesv1o4ByW"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                    </iframe><br>
+                </p>
+
+                <h5>Soldering and Wiring</h5>
+                <p>All components including the Artemis board, sensors, motor drivers and batteries were then secured on the robot. 
+                    The diagram below shows labeled images of the robot's front and back. The Artemis board and two motor drivers are placed
+                    inside the original compartment of the car's control PCB. The two TOF sensors are mounted at the front and 
+                    on the side (between the two wheels) of the car, while the IMU is mounted at the back. The positions of the two
+                    batteries are also indicated. To manage the numerous wires, some zip ties are used to keep the wiring tidy
+                    and ensure that no parts of the car stick out too much and touch the ground when the car flips over.<br>
+                    <img src="images/portfolio/lab4/component_placement.jpg" alt="" style="width: 80%; height: 50%"><br><br>
+
+                    During subsequent functionality testing, it was found that sometimes both motor drivers would overheat and the robot
+                    would not respond as expected to control commands. It was later discovered that this was due to the motor drivers not 
+                    sharing a common ground with Artemis. However, even after connecting the ground wires, this issue would still occur at times. 
+                    After checking the soldering, no short circuits were found.<br><br>
+
+                    It was then considered that the proximity of the two motor drivers in the same compartment might cause them to touch and
+                    short circuit when the robot was running. The solution, as shown in the picture below, was to use two zip ties to create a small enclosure
+                    for one of the motor drivers, preventing them from touching and causing a short circuit.<br>
+                    <img src="images/portfolio/lab4/motor_driver.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+                </p>
+
+                <h5>Lower Limit PWM Values</h5>
+                <p>The lower limits of PWM values required for the robot to overcome friction and start moving, as well as for on-axis
+                    rotation, was determined through a hardcoded exhaustive method. In the following code, the <b>loop()</b> function 
+                    contains an if statement with three blocks, each used for different tests. During each test, the other two blocks were 
+                    commented out. By adjusting the values of the two constant integer variables and repeatedly experimenting, the lower limits 
+                    of the PWM values for the two cases were determined. Note that, though, these lower limit values can be influenced by various factors, 
+                    such as the material of the floor and the remaining power of the motor battery.<br>
+                    <script src="https://gist.github.com/kx-74/11ef4111c1ef0968f733bb32f020985a.js"></script>                    
+                    
+                    To make the car overcome friction and start moving, as shown in the video below, the lower limit PWM value obtained was 40, 
+                    corresponding to approximately 15.7% duty cycle.<br>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/6b7-J0Tf4M4?si=JBR3q4p-VW4qlHcJ"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                    </iframe><br>
+
+                    To make the car do on-axis turns, as shown in the second block of the <b>loop()</b> function in the code above, the spinning directions of 
+                    the two motors were set to be opposite. In this case, the force required to overcome friction was surprisingly larger. The measured lower 
+                    limit PWM value was 180, corresponding to approximately 70.6% duty cycle, and the behaviour is shown below. Otherwise, the car would only 
+                    move very slowly in place, and might not even complete a full rotation within twenty senconds.<br>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/RUIG6sHifr8?si=V4UN7JiRYrsGpsy5"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                    </iframe>
+                    <br>
+                </p>
+
+                <h5>Calibration Demonstration</h5>
+                <p>Due to hardware reasons, the spin rates of the two motors are different. When the same PWM value is assigned to both
+                    motor drivers, the car is expected to move forward in a straight line; however, in reality, it clearly drifts to the
+                    left, which means the right motor spins faster than the left one. Therefore, a linear calibration factor was introduced,
+                    where the PWM value received by the left motor is equal to the PWM value received by the right motor multiplied by this
+                    factor. After repeated testing, it was determined that the value of this factor is 1.35. The video below shows the car
+                    following a straight line for 6 feet after being corrected with this value.<br>
+                    
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/p7BFi1sPFVI?si=UIKLgp2SZ9zzEshT"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen>
+                    </iframe><br>
+                </p>
+                
+                <h5>Open-Loop Control</h5>
+                <p>After the above tests had been completed, some basic movements were encapsulated into functions, including stop, move forward, move
+                    backward, clockwise turning and counterclockwise turning, as shown in the code below. Then, some open-loop, untethered
+                    control of the robot was executed, demonstrated in the video.<br>
+                    <script src="https://gist.github.com/kx-74/7a9fb24316afe44a63fd02f117f8c792.js"></script>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/2wxeGzrG57c?si=O5ezliArx-m4nXes"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                    </iframe><br>
+                </p>
+
+                <h5>Additional Task: analogWrite Frequency</h5>
+                <p>Based on the oscilloscope display in the previous section on Single Motor Testing, one horizontal grid in the graph
+                    represents 2.50 milliseconds, and one PWM cycle takes approximately 2.2 grids, or 5.5 milliseconds. Therefore, on the
+                    Artemis board, the frequency generated by the <b>analogWrite()</b> is approximately 181 Hz. It is adequately fast for the 
+                    motors, and also for the ToF sensors since they sample at a time intervel of about 20 milliseconds. However, if control based on 
+                    IMU readings is required, the current PWM signal may not be fast enough and could become a bottleneck for the robot to
+                    respond more quickly. If such a requirement exists, manually configuring the timers to generate a faster PWM signal may
+                    be useful.<br><br>
+                </p>
+
+                <h5>Additional Task: Lower Limit PWM Value Once in Motion</h5>
+                <p>Since static friction is greater than kinetic friction, the voltage required to start the robot is higher than 
+                    the voltage needed to keep the robot moving. After successfully starting the robot by running it for one second with the previously measured minimum start PWM value
+                    of 40, the PWM value was then decreased and repeatedly tested, until the minimum value that could maintain the robot's
+                    continued movement was determined. The code snippet is shown below, and the found PMW lower limit value is 28. The robot's 
+                    performance under this value is demonstrated in the video below.<br>
+                    <script src="https://gist.github.com/kx-74/4260c28980ce5efe85c96adedbbde1c1.js"></script>
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/3gUVcSQ3Rj0?si=IHJ9oooDhNTwmBxr"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen></iframe><br>
+                </p>
+
+            <h4>Discussion & Conclusion</h4>
+            <p>In this lab, I completed the soldering and hardware layout of a complete embedded project independently for the first time, which was 
+                very helpful for me to establish relevant skills and knowledge. Through practice, I gained a deeper understanding of some principles of soldering. 
+                Additionally, I became familiar with H-bridge motor drivers and reviewed the use of PWM control.<br><br>
+            </p>
+            
+            <h4>References</h4>
+            <p>
+                <a href=“https://fastrobotscornell.github.io/FastRobots/labs/Lab4.html”>Lab tutorials</a><br>
+                <a href=“https://www.ti.com/lit/ds/symlink/drv8833.pdf?ts=1709712171747&ref_url=https%253A%252F%252Fwww.google.com%252F”>DRV8833 Motor Driver Datasheet</a><br>
+                <a href=“https://www.pololu.com/product/2130”>DRV8833 Motor Driver Carrier Documents</a><br>
+            </p>
+        </div>
+      </div>
+    </div>
+ 	</body>
+</html>
