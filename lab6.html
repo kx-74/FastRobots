@@ -107,21 +107,172 @@ Global Page Section Start
         <!-- work single Content -->
         <div class="work-single-content">
             <h4>Objective</h4>
-            <p>The aim of this lab is to 
+            <p>The aim of this lab is to implement the PID controller to do stationary (in-place) orientation control for the robot. 
             </p>
             
             <h4>Prelab</h4>
-            <p>
+            <p>A well-designed mechanism for storing and transmitting data is crucial for debugging for this lab. Since the important 
+                functionalities have been encapsulated into functions in the previous lab, integrating this lab was relatively straightforward. <br><br>
+
+                The <b>START_IMU_PID</b> command, shown in the code snippet below, raises a flag that triggers a condition statement in the main loop. It also resets 
+                some intermediate variables, allowing for multiple tests to be conducted conveniently without the need to reconnect the Bluetooth or restart the robot.<br>
+                <script src="https://gist.github.com/kx-74/2c97debad284c9c83a29be19f97b74c9.js"></script><br>
+
+                The content of the main loop is shown below. When the start flag for orientation control is detected and the robot has
+                not been running for more than 20 seconds, the main loop instantiates the calculation of the angle, executes the PID
+                control, controls the motors accordingly, and stores the relevant data using the <b>data_save()</b> function.<br>
+                <script src="https://gist.github.com/kx-74/e7770dbcc1ecb33a770320931153ddf2.js"></script><br>
+
+                The overall process remains largely the same: first, connect to the robot via BLE, then send the <b>START_IMU_PID</b>
+                command. After the PID controller is either stopped by <b>START_IMU_PID</b> command or automatically times out after 20 seconds, the
+                <b>GET_IMU_PID_INFO</b> command is sent to transmit the stored data to the laptop end.<br><br>
+
+                A notification handler was defined as following, to parse the message string and store the data into seperate arrays: <br>
+                <img src="images/portfolio/lab6/notification_handler.jpg" alt="" style="width: 70%; height: 50%"><br><br>
+
+                In addition to the <b>KP/KI/KD_SET</b> commands added in lab 5, a <b>REF_ANGLE_SET</b> command was included here, which
+                allows for the direct modification of the set point variable via Bluetooth connection. The code is as follows: <br>
+                <script src="https://gist.github.com/kx-74/53e58cc19e0cf8a55bc82409163e2565.js"></script><br>
+
             </p>
 
             <h4>Lab Tasks</h4>
-                <h5></h5>
+                <h5>Programming Implementation & PID Input Signal Consideration</h5>
                 <p>
+                    <h6>Gyroscope & ToF PID Control Integration</h6>
+                    <p>As shown in the above <b>main</b> code snippet, the approach to integrating the PID controls for IMU and ToF in this lab 
+                        was to place the two PID controllers in two separate conditional cases that would not be executed simultaneously. This setup 
+                        is due to the requirement of the lab that only one PID controller would run at a time. 
+
+                        If simultaneous PID controls for both distance and orientation are desired, one feasible way is to set up a total PID control variable, 
+                        run the IMU and ToF PID controls in parallel, and add or subtract the outputs of them to this total variable to control 
+                        the motor according to both PID controllers simultaneously.<br><br>
+                    </p>
+
+                    <h6>BLE Command Processing During PID Control</h6>
+                    <p>By putting the PID controls in the if-else statement in the main loop, the code was designed to maintain the continuous
+                        sending and processing of Bluetooth commands even while the PID controller is operating. This functionality enables
+                        quick tuning of the PID gains and allows for changing the setpoint in real time while the robot is in motion. Such
+                        flexibility is crucial, especially for scenarios where the setpoint needs to be adjusted dynamically for stunts or
+                        navigation purposes. <br><br>
+                    </p>
+
+                    <h6>IMU Sensor Limitation</h6>
+                    <p>According to the IMU example code, the default maximum rotational velocity that the gyroscope can read is 255 degrees
+                        per second. This means that if the robot completes three-quarters of a circle or more within one second, the IMU's
+                        reading will reach its upper bound, resulting in inaccurate measurements. Therefore, the following code was introduced 
+                        to be executed during setup for adjusting the gyro's maximum reading range to 1000 degrees per second.<br>
+                        <script src="https://gist.github.com/kx-74/d3ff4b74ee9a13b14b0ba998862ce1f0.js"></script><br>
+                    </p>
+
+                    <h6>IMU Sensor Bias</h6>
+                    <p>One notable thing to mention is that the IMU gyroscope reading has a bias. Even when stationary, due to the non-zero
+                        mean noise in the environment, the gyro reading is not always 0. As a result, when integrated over time, the yaw value
+                        calculated using the gyro gradually drifts. In this case, the robot may think it is already at a non-zero position, but
+                        in reality, it is still at 0 degrees. This means that the robot's set point is biased, so when it tries to move to a
+                        specified set point, it cannot perfectly reach the desired angle.<br><br>
+
+                        Since the noise in the gyro reading is related to the environmental conditions, one solution is to let the robot remain
+                        stationary for a while when the PID controller starts. This allows taking a few samples of the static gyro readings and
+                        measuring an average bias. Then, subtracting this value from each gyro reading helped alleviate the bias phenomenon in a
+                        short period of time. The code snippet shown below is integrated into the <b>START_IMU_PID</b> command case.<br>
+                        <script src="https://gist.github.com/kx-74/226f3aa714be6756467d3a334a12bee1.js"></script><br>
+                    
+                    </p>
+                
+                </p>
+
+                <h5>PID Controller</h5>
+                <p>The implementation of the PID control function is shown in the following code snippet: <br>
+                    <script src="https://gist.github.com/kx-74/7e175f8683d696f0ef472a9191c2c07a.js"></script><br>
+
+                    <h6>Proportional Term</h5>
+                    <p>First, the Ki and Kd were set to zero and the effect of Kp was tested. In the video below, 
+                        the set point was set to 0 and the value of Kp was 10. After the robot was lightly kicked to move its orientation, it attempted 
+                        to return to the original orientation but ended up continuously overshooting and oscillating.<br>
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/vt64a9DoEYE?si=1BFoc3ggOpeT-W3w"
+                            title="YouTube video player" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen>
+                        </iframe><br><br>
+
+                        <blockquote>Range Discussion: <br><br>
+                            A maximum orientation error of 360 degrees would be enough for now, whereas the maximum PID control value is 255. 
+                            If calculated proportionally, the value of Kp should be 255/360, approximately 0.71. However, to increase the car's 
+                            rotation speed, Kp can be raised, as long as the PID control value is clamped within the range of ±255.<br>
+                        </blockquote>
+
+                        If the angle from the set point is not particularly large, the oscillation would eventually stop due to friction. The
+                        PID control data for this scenario is shown in the figure below. It can be observed that after the robot stops moving,
+                        there is still a steady-state error between the yaw value and the set point. This is because the error corresponds to a
+                        PID value that is within the dead zone of the motors, which is not large enough to overcome the friction and rotate the
+                        robot further. To eliminate this steady-state error, the Integral Controller must be introduced.<br>
+                        <img src="images/portfolio/lab6/p_ctrl.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+                    </p>
+
+                    <h6>Integral Term</h5>
+                    <p>Ki was then set to nonzero values for getting rid of the steady-state error. <br>
+                        
+                        <blockquote>Additional Task: Wind-Up Protection<br><br>
+                            Windup protection is crucial for the integral term. The purpose of the integral term is to eliminate steady-state
+                            errors, so its contribution to the PID control value should not be excessively large.<br><br>
+                            
+                            However, if the robot is held stationary for any reason, leading to a buildup of steady-state error, the integral term
+                            can become very large. When the robot starts moving again, the integral term can drive the robot too aggressively,
+                            causing it to move at full speed and taking a long time to eliminate the previously accumulated error.<br><br>
+                            
+                            By clamping the value of the integral term and limiting its range (as demonstrated in lines 17 and 18 of the PID control
+                            code above), the value of the integral term can be kept within a reasonable range at all times.<br>
+                        </blockquote>
+
+                        With the Integral Controller working together with the Proportional Controller, the steady-state error can be
+                        eliminated, as shown in the figure below. <br>
+                        <img src="images/portfolio/lab6/i_ctrl.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+
+                        However, in the figure above, it was observed that the integral control term was always at either -50 or 50, with very
+                        few instances of intermediate values. This is not the expected behavior of the integral controller. It was later
+                        discovered that this was because the limits of the wind-up were set too small, specifically in the range of only ±500.
+                        This range would be filled within just three or four loops due to the fast rotation speed of the robot and the ~10ms dt
+                        (which is the main loop interval between iterations). This limitation made it impossible for the wind-up to effectively
+                        reflect the historical state of the robot.<br><br>
+
+                        The wind-up limits were then set from ±500 to ±10000, and Ki was adjusted to 0.005 to ensure the contribution of the
+                        integral term to the final PID control value is kept within 50. The result is shown in the figure below, where the
+                        integral term clearly demonstrated a more accurate control response.<br>
+                        <img src="images/portfolio/lab6/i_ctrl_wind_up.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+                    </p>
+
+                    <h6>Derivative Term</h5>
+                    <p>In order to maintain the highspeed while eliminating overshooting caused by high Kp values, the Derivative Controller is 
+                        necessary. With the parameter combination <i>Kp=5, Ki=0.005, Kd=300</i>, the robot successfully achieved static orientation PID
+                        control. As shown in the video below, starting from 0 degrees, the set points were sequentially set to 90 degrees, 180
+                        degrees, and back to 0 degrees. The robot was able to quickly rotate to the specified angles in a short period of time,
+                        with a slight, promptly corrected steady-state error.<br>
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/5ehWJiRi05Q?si=Lb8wstNAai0w1kxH"
+                            title="YouTube video player" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen>
+                        </iframe><br><br>
+
+                        The PID control data for this scenario is shown in the figure below. It can be observed how the pid_error quickly
+                        approached the set point under the combined influence of the P term and D term, overshooting slightly, and then
+                        gradually converging towards the target angle under the influence of the I term.<br>
+                        <img src="images/portfolio/lab6/pid_ctrl.jpg" alt="" style="width: 90%; height: 50%"><br><br>
+
+                        It is worth noting that there are many spikes in the PID control value, which originate from the Derivative term. The
+                        noise in the gyro readings during the robot's operation can be significant, and the derivative form is sensitive to this kind of 
+                        noise. A low-pass filter could be used to mitigate or eliminate this noise, but since the current results are already satisfactory,
+                        no filtering was applied here. Additionally, at the moment of set point change, a very large spike can be seen in
+                        the D term, which is due to the derivative kick. However, since the total PID control value has been clamped, this spike
+                        does not cause any damage.<br><br>
+                    </p>
 
                 </p>
 
+
             <h4>Discussion & Conclusion</h4>
-            <p>
+            <p>This lab deepened my understanding of PID control and its application in robotics, especially in addressing Integral Controller wind-up issues. 
+                I also gained familiarity with the characteristics of the IMU sensor, including its reading bias issue and range limitations.
             </p>
             
             <h4>References</h4>
