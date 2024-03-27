@@ -142,16 +142,8 @@ void handle_command() {
     case START_MOTOR_CTRL:
       data_arrays_reset();
 
-      // Collect the PWM value assigned by the user
-      success = robot_cmd.get_next_value(message);
-      if (!success) {
-        Serial.println("Invalid Command Message: PWM value expected");
-        return;
-      }
-
       Serial.println("Start manual motor control...");
       start_manual_motor_ctrl = true;
-      motor_ctrl_PWM = atoi(message);
 
       start_time = millis();
       break;
@@ -161,6 +153,7 @@ void handle_command() {
       */
     case STOP_MOTOR_CTRL:
         Serial.println("Stop manual motor control...");
+        motor_ctrl_PWM = 0;
         start_manual_motor_ctrl = false;
         break;
 
@@ -279,6 +272,33 @@ void handle_command() {
       }
       ref_angle = atoi(message);
       break;
+
+    case MOTOR_PMW_SET:
+      // Collect the value assigned by the user
+      success = robot_cmd.get_next_value(message);
+      if (!success) {
+        Serial.println("Invalid Command Message: PMW value expected");
+        return;
+      }
+      motor_ctrl_PWM = atoi(message);
+      break;
+
+    case GET_MOTOR_TOF_INFO:
+      for (int i=0; i<arr_counter; i++) {
+          tx_estring_value.clear();
+          tx_estring_value.append(ToF1_reading_arr[i]);
+          tx_estring_value.append(", ");
+          tx_estring_value.append(motor_ctrl_PWM_arr[i]);
+          tx_estring_value.append(", ");
+          tx_estring_value.append(timestamp_arr[i]);
+          tx_characteristic_string.writeValue(tx_estring_value.c_str());
+
+          Serial.print("Sent back: ");
+          Serial.println(tx_estring_value.c_str());
+        }
+
+        Serial.println("Data transmission completed.");
+        break;
 
     /* 
       * The default case may not capture all types of invalid commands.
@@ -513,10 +533,23 @@ void loop() {
         data_save();
       }
       else if (start_manual_motor_ctrl && (millis()-start_time)<20000) {
-        // Stop if the flag is not raised or the car has been running over 20 seconds
+        // Manually control the motor
+        current_time = millis();
         forward(motor_ctrl_PWM);
+
+        if (distanceSensor1.checkForDataReady()) {
+          ToF1_second = distanceSensor1.getDistance();
+
+          // Only store the ToF data when the reading changes
+          if (ToF1_second != ToF1_first){
+            data_save();
+            ToF1_first = ToF1_second;
+          }
+          
+        }
       }
       else {
+        // Stop if the flag is not raised or the car has been running over 20 seconds
         stop();
       }
 
