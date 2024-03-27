@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<!--
+ // WEBSITE: https://themefisher.com
+ // TWITTER: https://twitter.com/themefisher
+ // FACEBOOK: https://www.facebook.com/themefisher
+ // GITHUB: https://github.com/themefisher/
+-->
+
+<html class="no-js">
+    <head>
+        <!-- Basic Page Needs
+        ================================================== -->
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="icon" href="favicon.ico">
+        <title>Fast Robots | Lab 7</title>
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="author" content="">
+        <!-- Mobile Specific Metas
+        ================================================== -->
+        <meta name="format-detection" content="telephone=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        
+        <!-- Template CSS Files
+        ================================================== -->
+        <!-- Twitter Bootstrs CSS -->
+        <link rel="stylesheet" href="plugins/bootstrap/bootstrap.min.css">
+        <!-- Ionicons Fonts Css -->
+        <link rel="stylesheet" href="plugins/ionicons/ionicons.min.css">
+        <!-- animate css -->
+        <link rel="stylesheet" href="plugins/animate-css/animate.css">
+        <!-- Hero area slider css-->
+        <link rel="stylesheet" href="plugins/slider/slider.css">
+        <!-- slick slider -->
+        <link rel="stylesheet" href="plugins/slick/slick.css">
+        <!-- Fancybox -->
+        <link rel="stylesheet" href="plugins/facncybox/jquery.fancybox.css">
+        <!-- hover -->
+        <link rel="stylesheet" href="plugins/hover/hover-min.css">
+        <!-- template main css file -->
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body><!--
+    ==================================================
+    Header Section Start
+    ================================================== -->
+    <section class="top-bar animated-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                        <a class="navbar-brand" href="index.html">
+                            <!-- <img class="logo" src="./images/logo.jpg" alt="logo"> -->
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+    
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html">Home
+                                        <span class="sr-only">(current)</span>
+                                    </a>
+                                </li>
+                                <!-- <li class="nav-item">
+                                    <a class="nav-link" href="about.html">About</a>
+                                </li> -->
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!--
+==================================================
+Global Page Section Start
+================================================== -->
+<section class="global-page-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="block">
+          <h2>Lab 7: Kalman Filter</h2>
+          <div class="portfolio-meta">
+            <span>Mar 20, 2024</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--/#Page header-->
+
+<!-- work details part start -->
+<section class="work-single">
+    <div class="container">
+    <!-- <div class="row mb-4 mx-4 p-5 align-items-center"> -->
+      <div class="col-lg-9">
+        <!-- work single Content -->
+        <div class="work-single-content">
+            <h4>Objective</h4>
+            <p>The aim of this lab is to implement a Kalman Filter, combining the measurement and the prediction to achieve better estimates of the robot's 
+                position even when the distance measurement of the ToF sensor is not yet available.
+            </p>
+
+            <h4>Lab Tasks</h4>
+                <h5>Estimate Drag and Momentum</h5>
+                <p>Estimating the drag and momentum terms is crucial for constructing the state space model of the system. In a common
+                    scenario where the robot is driven towards a wall, the distance to the wall is represented by <i>x</i>, and the system's
+                    control input is represented by <i>u</i>. The drag (<i>d</i>) and momentum (<i>m</i>) terms within the state space
+                    equation, along with the formulas derived for these terms, are illustrated in the figure below, sourced from class slides. <br>
+                    <img src="images/portfolio/lab7/dNm_formula.jpg" alt="" style="width: 60%; height: 50%"><br><br>
+
+                    According to the formulas in the figure above, to estimate the values of <i>d</i> and <i>m</i>, a step response
+                    <i>u(t)</i> is needed as the PWM value for the motor input, driving the robot to the wall. The <i>u(t)</i> is set as
+                    shown in the figure below, with a step size of 180, to maintain similar dynamics as the PID controller output range was
+                    limited to 255 in previous labs.<br>
+                    <img src="images/portfolio/lab7/step response.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+
+                    The results are shown in the figure below, where the ToF distance readings are displayed along with the calculated robot
+                    speeds, both plotted on the same graph. The units on the y-axis correspond to <i>mm</i> for distance and <i>mm/s</i> for
+                    speed. To ensure that the distance information appears smooth and not as step-like, the ToF reading is logged in the
+                    data array along with the corresponding timestamp only when there is a new reading from the ToF sensor that differs from
+                    the previous one.<br>
+                    <img src="images/portfolio/lab7/dNm_data.jpg" alt="" style="width: 70%; height: 50%"><br><br>
+
+                    As the plots imply, the robot reaches a steady-state speed of approximately 3700mm/s at around 1.5 seconds. The
+                    speed starts to rise, and then reaches 90% of its steady-state value at approximately 0.5s and 1.5s, respectively,
+                    indicating a 90% rise time of approximately 1.0s. Substituting these values into the equations, the following estimates 
+                    for <i>d</i> and <i>m</i> are obtained:<br>
+                    <img src="images/portfolio/lab7/dNm_calc.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+                </p>
+
+                <h5>Initialize the Kalman Filter</h5>
+                <p>The workflow of the Kalman Filter, as shown in the figure from the lecture slides, aims to compute the state estimate
+                    <i>μ(t)</i>. The control input <i>u(t)</i> and measurement <i>z(t)</i> data are obtained from the robot system. To
+                    complete the algorithm, the matrices A, B, and C are required, and the noise matrices <i>Σu</i> and <i>Σz</i> need to be
+                    specified.<br>
+                    <img src="images/portfolio/lab7/KF.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+
+                    With the drag and momentum terms found above, the <i>A</i> and <i>B</i> matrices of the state space equation are calculated 
+                    and then discretized as shwon below. Note that the sampling interval is set to 0.098s, as it is the average time interval 
+                    between the timestamps in this test, with the ToF sensor being set to long-distance mode. <br>
+                    <img src="images/portfolio/lab7/AnB_matrices.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+                    <img src="images/portfolio/lab7/sample_interval.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+
+                    The C matrix should be C = [-1, 0], as the robot drives towards the wall, which means the negative distance from the wall is measured. <br><br>
+                    
+                    The final step is to specify the process noise and sensor noise covariance matrices, which require a total of three
+                    covariance values. These values can be determined using the formula provided in the lecture slides, as shown below. <br>
+                    <img src="images/portfolio/lab7/covariance.jpg" alt="" style="width: 40%; height: 50%"><br><br>
+
+                    For the process noise, the two covariance values are directly related to the sampling time and represent the process
+                    noise regarding the robot's position and speed, respectively. As for the measurement noise, also called sensor noise,
+                    the covariance value is set to 20mm, indicating that for each ToF sensor measurement, there is a likely error of less
+                    than 20mm. The noise matrices are calculated as follows:<br>
+                    <img src="images/portfolio/lab7/noise_matrices.jpg" alt="" style="width: 60%; height: 50%"><br><br>
+                </p>
+
+                <h5>Implement and Test the Kalman Filter (Python)</h5>
+                <p>The function of the Kalman Filter is declared as follows:<br>
+                    <img src="images/portfolio/lab7/KF_function.jpg" alt="" style="width: 60%; height: 50%"><br><br>
+
+                    To validate the Kalman Filter parameters, an implementation was carried out in Jupyter using the PID control data from a
+                    straight run towards the wall. Some initial states are necessary to be specified, as shown in the figure below. The PWM
+                    values are converted into the input <i>u</i>, scaled in the range [0, 1] by dividing the step size of 180. The initial
+                    position of the robot and the starting speed are encapsulated in the <i>x</i> vector; the <i>sig</i> matrix denotes
+                    the initial state uncertainty, and these two variables will be updated in each iteration of the Kalman filter. Then, the 
+                    Kalman Filter was called, and the estimate state results were stored.<br>
+                    <img src="images/portfolio/lab7/kf_call.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+
+                    With the above assigned parameters (<i>σ1, σ2</i> = 1020.40816327 decided by the sample interval and <i>σ3</i> = 20),
+                    running the Kalman filter shows estimation results that fit well with the ToF readings, as shown below.<br>
+                    <img src="images/portfolio/lab7/KF_res_normal.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+
+                    Setting <i>σ3</i> to 0 results in the Kalman Filter output shown in the figure below. This change indicates that the
+                    sensor measurement has no uncertainty at all, causing the Kalman Filter's estimate to align completely with the sensor
+                    readings as expected.<br>
+                    <img src="images/portfolio/lab7/KF_res_measurement.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+
+                    Setting <i>σ3</i> back to 20 but arbitrarily changing <i>σ1</i> and <i>σ2</i> to 1 results in the output shown in the
+                    figure below. Since <i>σ1</i> and <i>σ2</i> are inversely proportional to the sample interval, if the sample rate is
+                    higher, these values will be smaller. In such cases, the system model is more reliable than the measurement, and the
+                    Kalman Filter's estimation should be used instead of the ToF readings.<br>
+                    <img src="images/portfolio/lab7/KF_res_model.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+                </p>
+
+                <h5>Estimating the Distance with Kalman Filter</h5>
+                <p>In applications, the Kalman Filter can be used to predict the state of the robot when new readings from the ToF sensor
+                    are not yet available, as a substitution of the extrapolation method used in Lab 6. To achieve this, as shown in the figure below, 
+                    two new timestamps were interpolated between each pair of recorded data points.<br>
+                    <img src="images/portfolio/lab7/KF_est_interpolation.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+
+                    On the other hand, the implementation of the Kalman Filter function was slightly modified as shown in the figure below,
+                    to additionally accept a flag. When the ToF sensor reads a new value with a timestamp, this flag is raised, and the
+                    Kalman Filter performs both prediction and update steps. When there is no new measurement, the Kalman Filter only
+                    performs the prediction step to estimate the state of the robot.<br>
+                    <img src="images/portfolio/lab7/KF_est_flag.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+                
+                    The data processing approach described above demonstrates how the Kalman Filter estimates the state of the robot by
+                    "running faster" than the ToF sensor. The results are shown below, which is pretty accurate, especially when the robot
+                    starts moving.<br>
+<img src="images/portfolio/lab7/KF_est_1.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+                </p>
+
+            <h4>Discussion & Conclusion</h4>
+            <p>In this lab, I learned about the Kalman Filter and its application in robotics. After a mathematical model is created
+                for a system, the Kalman Filter can serve as a valuable tool for applying control theory to approximate the behavior of
+                the real system. Compared to open-loop estimations such as extrapolation, measurements derived from this kind of
+                parameter-tuned models are generally more precise.
+            </p>
+            
+            <h4>References</h4>
+            <p>
+                <a href="https://fastrobotscornell.github.io/FastRobots/labs/Lab7.html">Lab tutorials</a><br>
+                <a href="https://www.mathworks.com/videos/series/understanding-kalman-filters.html">Understanding Kalman Filters</a><br>
+            </p>
+        </div>
+      </div>
+    </div>
+ 	</body>
+</html>
