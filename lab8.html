@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<!--
+ // WEBSITE: https://themefisher.com
+ // TWITTER: https://twitter.com/themefisher
+ // FACEBOOK: https://www.facebook.com/themefisher
+ // GITHUB: https://github.com/themefisher/
+-->
+
+<html class="no-js">
+    <head>
+        <!-- Basic Page Needs
+        ================================================== -->
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="icon" href="favicon.ico">
+        <title>Fast Robots | Lab 8</title>
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="author" content="">
+        <!-- Mobile Specific Metas
+        ================================================== -->
+        <meta name="format-detection" content="telephone=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        
+        <!-- Template CSS Files
+        ================================================== -->
+        <!-- Twitter Bootstrs CSS -->
+        <link rel="stylesheet" href="plugins/bootstrap/bootstrap.min.css">
+        <!-- Ionicons Fonts Css -->
+        <link rel="stylesheet" href="plugins/ionicons/ionicons.min.css">
+        <!-- animate css -->
+        <link rel="stylesheet" href="plugins/animate-css/animate.css">
+        <!-- Hero area slider css-->
+        <link rel="stylesheet" href="plugins/slider/slider.css">
+        <!-- slick slider -->
+        <link rel="stylesheet" href="plugins/slick/slick.css">
+        <!-- Fancybox -->
+        <link rel="stylesheet" href="plugins/facncybox/jquery.fancybox.css">
+        <!-- hover -->
+        <link rel="stylesheet" href="plugins/hover/hover-min.css">
+        <!-- template main css file -->
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body><!--
+    ==================================================
+    Header Section Start
+    ================================================== -->
+    <section class="top-bar animated-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                        <a class="navbar-brand" href="index.html">
+                            <!-- <img class="logo" src="./images/logo.jpg" alt="logo"> -->
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+    
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html">Home
+                                        <span class="sr-only">(current)</span>
+                                    </a>
+                                </li>
+                                <!-- <li class="nav-item">
+                                    <a class="nav-link" href="about.html">About</a>
+                                </li> -->
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!--
+==================================================
+Global Page Section Start
+================================================== -->
+<section class="global-page-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="block">
+          <h2>Lab 8: Stunts</h2>
+          <div class="portfolio-meta">
+            <span>Mar 27, 2024</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--/#Page header-->
+
+<!-- work details part start -->
+<section class="work-single">
+    <div class="container">
+    <!-- <div class="row mb-4 mx-4 p-5 align-items-center"> -->
+      <div class="col-lg-9">
+        <!-- work single Content -->
+        <div class="work-single-content">
+            <h4>Objective</h4>
+            <p>The aim of this lab is to integrate previous work and enable the     robot to perform fast stunts. The selected stunt task is 
+                orientation control, where the goal is to drive the robot fast forward towards the wall and initiate a drift (a 180-degree turn) 
+                when it's close.
+            </p>
+
+            <h4>Lab Tasks</h4>
+                <h5>Drifting Implementation</h5>
+                <p>For initiating a drift effect, it is required to add orientation PID control to the motor PWM values while controlling the motor's 
+                    forward motion. For this purpose, a motor control function named <i>turn()</i> was defined, as shown below. In this function, 
+                    the two motor wheels rotate in the same direction, allowing the robot to continue moving forward; and by assigning different speeds for the left and right motors, the robot can turn while continuing its forward movement.<br>
+                    <script src="https://gist.github.com/kx-74/eb07ff262b1f2456cec7e06830eb244d.js"></script><br>
+
+                    In the main loop, the IMU PID calculation and the drift control were implemented as parallel if blocks, as shown below. The drift functionality was integrated in a way that the standalone in-axis orientation control is still able to work seperately, enhancing the robot's maneuverability.<br>
+                    <script src="https://gist.github.com/kx-74/b81ad6f4c002950efc32f730549e9dba.js"></script><br>
+
+                    When the drift function is not activated and only the orientation control is enabled, the orientation control block directly controls the motors based on the angular PID results. In this lab, to perform the drifting stunt, the orientation control block checks the drift control flag. If the flag is raised, the block does not directly control the motors; instead, it passes the <i>pid_ctrl</i> PWM value to the drifting control block to combine it with the default forwarding PWM value.<br><br>
+
+                    During the drifting stunt, the reference angle is initially set to 0, and the angular PID control tries to maintain the robot's direction unchanged, resulting in almost the same PWM values for both motors. When the ToF sensor detects that the robot is within a certain distance from the wall, the reference angle is set to 180. This causes the PWM values for the left and right motors to be adjusted by adding or subtracting the PID control values from the original forward values, enabling the robot to turn.<br><br>
+                </p>
+
+                <h5>Results</h5>
+                <p><iframe width="560" height="315" 
+                    src="https://youtube.com/embed/1skjgbcM3R4?feature=shared" 
+                    title="YouTube video player" frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media;
+                    gyroscope; picture-in-picture;
+                    web-share"
+                    allowfullscreen></iframe><br>
+                    In the video above, with <i>Kp=5, Ki=0.005, Kd=500</i>, and <i>forwarding PWM value=180</i>, the robot completed the drifting stunt while it is evident that there was significant overshoot in the orientation control. The sensor data and motor control values with timestamps are shown below. Disregard the erratic spikes caused by the derivative kick, and it is quite apparent that shortly after the initiation of orientation control, the PWM values for both left and right motors saturate to ±255, indicating that Kp is too large.<br><br>
+                    <img src="images/portfolio/lab8/drift_1.jpg" alt="" style="width: 50%; height: 50%"><br><br>
+
+                    <iframe width="560" height="315" 
+                    src="https://youtube.com/embed/AmpO_o-EJ7M?feature=shared" 
+                    title="YouTube video player" frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media;
+                    gyroscope; picture-in-picture;
+                    web-share"
+                    allowfullscreen></iframe><br>
+                    In this video, with <i>Kp=1, Ki=0.005, Kd=500</i>, and <i>PWM=150</i>, the value of Kp was decreased to reduce overshoot, and the forwarding PWM value was also slightly decreased to complete the 180-degree turn before hitting the wall. It can be observed that the drift was completed successfully with minimal overshoot.<br><br>
+
+                    <iframe width="560" height="315" 
+                    src="https://youtube.com/embed/DFgzzUU1oz8?feature=shared" 
+                    title="YouTube video player" frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media;
+                    gyroscope; picture-in-picture;
+                    web-share"
+                    allowfullscreen></iframe><br>
+                    Building on the previous attempt, this trial set the parameters to <i>Kp=1.5, Ki=0.005, Kd=500</i>, and <i>PWM=200</i>, slightly increasing Kp and PWM. The results remained quite satisfactory, with little overshoot and faster robot movement. The changes in angle and distance throughout the process are shown in the figure below, demonstrating significantly reduced overshoot comopared to the first trial.<br>
+                    <img src="images/portfolio/lab8/drift_3.jpg" alt="" style="width: 50%; height: 50%"><br><br>                    
+                </p>
+
+            <h4>Discussion & Conclusion</h4>
+            <p>This lab was quite enjoyable and implementing the stunts was an exciting experience. When adding new features, it was interesting to twist my mind a little bit to figure out a best way to arrange the code logic to enhance the capabilities of the robot, making it more versatile.
+            </p>
+            
+            <h4>References</h4>
+            <p>
+                <a href="https://fastrobotscornell.github.io/FastRobots/labs/Lab8.html">Lab tutorials</a><br>
+            </p>
+        </div>
+      </div>
+    </div>
+ 	</body>
+</html>
