@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+
+<!--
+ // WEBSITE: https://themefisher.com
+ // TWITTER: https://twitter.com/themefisher
+ // FACEBOOK: https://www.facebook.com/themefisher
+ // GITHUB: https://github.com/themefisher/
+-->
+
+<html class="no-js">
+    <head>
+        <!-- Basic Page Needs
+        ================================================== -->
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="icon" href="favicon.ico">
+        <title>Fast Robots | Lab 9</title>
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="author" content="">
+        <!-- Mobile Specific Metas
+        ================================================== -->
+        <meta name="format-detection" content="telephone=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        
+        <!-- Template CSS Files
+        ================================================== -->
+        <!-- Twitter Bootstrs CSS -->
+        <link rel="stylesheet" href="plugins/bootstrap/bootstrap.min.css">
+        <!-- Ionicons Fonts Css -->
+        <link rel="stylesheet" href="plugins/ionicons/ionicons.min.css">
+        <!-- animate css -->
+        <link rel="stylesheet" href="plugins/animate-css/animate.css">
+        <!-- Hero area slider css-->
+        <link rel="stylesheet" href="plugins/slider/slider.css">
+        <!-- slick slider -->
+        <link rel="stylesheet" href="plugins/slick/slick.css">
+        <!-- Fancybox -->
+        <link rel="stylesheet" href="plugins/facncybox/jquery.fancybox.css">
+        <!-- hover -->
+        <link rel="stylesheet" href="plugins/hover/hover-min.css">
+        <!-- template main css file -->
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body><!--
+    ==================================================
+    Header Section Start
+    ================================================== -->
+    <section class="top-bar animated-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                        <a class="navbar-brand" href="index.html">
+                            <!-- <img class="logo" src="./images/logo.jpg" alt="logo"> -->
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+    
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html">Home
+                                        <span class="sr-only">(current)</span>
+                                    </a>
+                                </li>
+                                <!-- <li class="nav-item">
+                                    <a class="nav-link" href="about.html">About</a>
+                                </li> -->
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!--
+==================================================
+Global Page Section Start
+================================================== -->
+<section class="global-page-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="block">
+          <h2>Lab 9: Mapping</h2>
+          <div class="portfolio-meta">
+            <span>Apr 10, 2024</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--/#Page header-->
+
+<!-- work details part start -->
+<section class="work-single">
+    <div class="container">
+    <!-- <div class="row mb-4 mx-4 p-5 align-items-center"> -->
+      <div class="col-lg-9">
+        <!-- work single Content -->
+        <div class="work-single-content">
+            <h4>Objective</h4>
+            <p>
+                The aim of this lab is to create a map of a static room for use in future localization and navigation functionalities. To build the map, the robot is placed in several marked locations around the room and rotates around its axis to collect ToF data.
+            </p>
+
+            <h4>Lab Tasks</h4>
+                <h5>Robot Control</h5>
+                <p>
+                    The previously developed PID orientation control is utilized in this lab to enable the robot to do on-axis turns in small, accurate increments. When the mapping functionality is activated, the robot rotates clockwise 18 times, recording ToF data each time. The rotation increment is 20 degrees, with a 1-second interval between rotations to ensure stable ToF readings.<br><br>
+
+                    Several new command cases have been added, as shown in the code block below.<br>
+                    <script src="https://gist.github.com/kx-74/129379acea47e4f9b7691bc277fd47fe.js"></script><br>
+
+                    In lab 6, the PID orientation control was already implemented in the main loop, enclosed within an if statement that checks a flag to determine whether to execute the PID orientation control. Now, another parallel if statement is added to the main function to handle operations other than PID control in this mapping task. This includes ToF data reading, PID set points adjusting, and data storage. The flags for both if statements are raised in the <i>START_MAPPING</i> command case, allowing the desired functionality to be achieved. The code for the main loop is as follows.<br>
+                    <script src="https://gist.github.com/kx-74/e95eb01f56a4e298e6a74d0d6cd4d1db.js"></script><br>
+
+                    Initially, the plan for implementing this task was to write all the non-PID control operations in a command case directly as a while loop, which means the robot would stay in the <i>handle_command()</i> function until it completes a 360-degree rotation. However, having the operations in a while loop would prevent the robot from receiving other commands during the task. As operators controlling the robot, we want to maintain as smooth and immediate communication with the robot as possible. Therefore, the current method was chosen eventually over this approach.<br><br>
+
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/m9DSQ4Q2jpI?si=rxdcWmcFVmG5pZDl" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><br>
+
+                    The above video shows the robot performing (approximately) on-axis turns in small increments using orientation PID control. Each turn is 20 degrees, totaling 18 turns, which completes one full rotation before stopping.<br><br>
+      
+                    The set point of the PID controller, the angle readings from the IMU sensor, and the corresponding ToF data are displayed in the figure below. It can be seen that there is a certain error in the yaw value compared to the set point, but it is acceptable (and this error may also be influenced by the drift of the IMU sensor itself).
+                    <img src="images/portfolio/lab9/control_eg.png" alt="" style="width: 50%; height: 50%"><br><br>
+                </p>
+
+                <h5>Data Gathering</h5>
+                <p>
+                    The room to be mapped is shown in the figure below. In this map, each square represents a single grid cell, and the highlighted square in red represents (0, 0). The other black ones indicate the locations where the robot collected data from, with coordinates at (0,3), (5,3), (5,-3), and (-3,-2), respectively.
+                    <img src="images/portfolio/lab9/map_grid.jpg" alt="" style="width: 70%; height: 50%"><br><br>
+
+                    The polar plots of the results are shown below.<br>
+                    <img src="images/portfolio/lab9/polar_1st.png" alt="" style="width: 40%; height: 40%">
+                    <img src="images/portfolio/lab9/polar_2nd.png" alt="" style="width: 40%; height: 40%"><br>
+                    <img src="images/portfolio/lab9/polar_3rd.png" alt="" style="width: 40%; height: 40%">
+                    <img src="images/portfolio/lab9/polar_4th.png" alt="" style="width: 40%; height: 40%"><br><br>
+
+                </p>
+
+            <h4>Discussion & Conclusion</h4>
+            <p>
+            </p>
+            
+            <h4>References</h4>
+            <p>
+                <a href="https://fastrobotscornell.github.io/FastRobots/labs/Lab9.html">Lab tutorials</a><br>
+                <a href="https://fastrobotscornell.github.io/FastRobots/lectures/FastRobots-2-TransformationMatrices.pdf">Transform Matrices</a><br>
+                <a href=""></a><br>
+            </p>
+        </div>
+      </div>
+    </div>
+ 	</body>
+</html>
