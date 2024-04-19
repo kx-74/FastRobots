@@ -137,16 +137,30 @@ Global Page Section Start
                     The room to be mapped is shown in the figure below. In this map, each square represents a single grid cell, and the highlighted square in red represents (0, 0). The other black ones indicate the locations where the robot collected data from, with coordinates at (0,3), (5,3), (5,-3), and (-3,-2), respectively.
                     <img src="images/portfolio/lab9/map_grid.jpg" alt="" style="width: 70%; height: 50%"><br><br>
 
-                    The polar plots of the results are shown below.<br>
+                    The polar plots of the results are shown below. The relatively high resolution here is due to data being stored each time the PID runs. However, many of these data points were recorded while the robot is in motion, and thus have higher error rates. In the subsequent analysis, only the angles closest to the 18 set points are selected.<br>
                     <img src="images/portfolio/lab9/polar_1st.png" alt="" style="width: 40%; height: 40%">
                     <img src="images/portfolio/lab9/polar_2nd.png" alt="" style="width: 40%; height: 40%"><br>
                     <img src="images/portfolio/lab9/polar_3rd.png" alt="" style="width: 40%; height: 40%">
                     <img src="images/portfolio/lab9/polar_4th.png" alt="" style="width: 40%; height: 40%"><br><br>
+                </p>
 
+                <h5>Merge And Plot</h5>
+                <p>
+                    The formula shown in the figure below was applied to each dataset to perform the coordinate transformation from cylindrical coordinate system in the robot frame to Cartesian coordinate system in the global frame.<br>
+                    <img src="images/portfolio/lab9/transformation.png" alt="" style="width: 70%; height: 50%"><br><br>
+
+                    The formula shown in the figure below was applied to each dataset to perform the coordinate transformation from cylindrical coordinate system in the robot frame to Cartesian coordinate system in the global frame. The <i>r/30.48</i> was for normalizing the measurement units from centimeters to feet, and then the conversion from cylindrical coordinates to rectangular coordinates is calculated. Finally, by adding the offset based on the robot's position in the global frame, the required data was obtained. Results from different observing points were plotted on the scatter plot below:<br>
+                    <img src="images/portfolio/lab9/Map.png" alt="" style="width: 50%; height: 50%"><br><br>
+
+                    Based on the collected data, the locations of walls in the map were estimated manually, as shown in the figure below.<br>
+                    <img src="images/portfolio/lab9/Map_approximate.png" alt="" style="width: 50%; height: 50%"><br><br>
                 </p>
 
             <h4>Discussion & Conclusion</h4>
             <p>
+                The data points I collected were somewhat limited. Obtaining more data would likely result in a more accurate map. One approach could be to reduce the interval between set points for the PID orientation control. For example, stopping and storing data every 10 degrees of rotation would increase the density of data points on the map, and should provide a better estimation of the walls. However, this would require fine-tuning of the PID control to ensure accurate 10-degree turns each time.<br><br>
+
+                I also attempted to use readings from two ToF sensors simultaneously as I placed one of them at the front of the robot and the other on the side. Theoretically, these two readings should be similar, with a 90-degree angle offset between them, so that I can have an additional set of data from the same observing point. However, the actual readings from the side sensor and those from the front sensor were so different to be cross-referenced. Due to the time constraints, I opted to use just the correct set of data from the front sensor, but improving this could potentially enhance accuracy.<br><br>
             </p>
             
             <h4>References</h4>
