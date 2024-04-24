@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+<!--
+ // WEBSITE: https://themefisher.com
+ // TWITTER: https://twitter.com/themefisher
+ // FACEBOOK: https://www.facebook.com/themefisher
+ // GITHUB: https://github.com/themefisher/
+-->
+
+<html class="no-js">
+    <head>
+        <!-- Basic Page Needs
+        ================================================== -->
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="icon" href="favicon.ico">
+        <title>Fast Robots | Lab 10</title>
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="author" content="">
+        <!-- Mobile Specific Metas
+        ================================================== -->
+        <meta name="format-detection" content="telephone=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        
+        <!-- Template CSS Files
+        ================================================== -->
+        <!-- Twitter Bootstrs CSS -->
+        <link rel="stylesheet" href="plugins/bootstrap/bootstrap.min.css">
+        <!-- Ionicons Fonts Css -->
+        <link rel="stylesheet" href="plugins/ionicons/ionicons.min.css">
+        <!-- animate css -->
+        <link rel="stylesheet" href="plugins/animate-css/animate.css">
+        <!-- Hero area slider css-->
+        <link rel="stylesheet" href="plugins/slider/slider.css">
+        <!-- slick slider -->
+        <link rel="stylesheet" href="plugins/slick/slick.css">
+        <!-- Fancybox -->
+        <link rel="stylesheet" href="plugins/facncybox/jquery.fancybox.css">
+        <!-- hover -->
+        <link rel="stylesheet" href="plugins/hover/hover-min.css">
+        <!-- template main css file -->
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body><!--
+    ==================================================
+    Header Section Start
+    ================================================== -->
+    <section class="top-bar animated-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                        <a class="navbar-brand" href="index.html">
+                            <!-- <img class="logo" src="./images/logo.jpg" alt="logo"> -->
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+    
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html">Home
+                                        <span class="sr-only">(current)</span>
+                                    </a>
+                                </li>
+                                <!-- <li class="nav-item">
+                                    <a class="nav-link" href="about.html">About</a>
+                                </li> -->
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!--
+==================================================
+Global Page Section Start
+================================================== -->
+<section class="global-page-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="block">
+          <h2>Lab 10: Localization (Sim)</h2>
+          <div class="portfolio-meta">
+            <span>Apr 17, 2024</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--/#Page header-->
+
+<!-- work details part start -->
+<section class="work-single">
+    <div class="container">
+    <!-- <div class="row mb-4 mx-4 p-5 align-items-center"> -->
+      <div class="col-lg-9">
+        <!-- work single Content -->
+        <div class="work-single-content">
+            <h4>Objective</h4>
+            <p>
+                The aim of this lab is to implement grid localization using Bayes Filter.
+            </p>
+
+            <h4>Implementation</h4>
+                <h5>Bayes Filter Algorithm</h5>
+                <p>
+                    The algorithm used to implement Bayes Filter is shown in the following figure from lecture slides. This filter takes in control inputs <i>u_t</i>, sensor readings <i>z_t</i>, and a belief matrix <i>bel[x_(t-1)]</i> represented by the set of probabilities of each grid cell. In each iteration of the Bayes filter, there are two steps. The first step, prediction step, incorporates control input (movement) data and update the belif matrix accordingly. The second step is an update, where the filter uses observation (measurement) data to reduce uncertainty in the belief of the system.<br>
+                    <img src="images/portfolio/lab10/algorithm.png" alt="" style="width: 70%; height: 50%"><br><br>
+                </p>
+
+                <h5>Prediction Step</h5>
+                <p>
+                    To obtain the prediction <i>bel_bar(x_t)</i> of the current state, the estimated state of the previous time step <i>bel[x_(t-1)]</i> and the state transition model are needed.<br><br>
+
+                    <h6>Compute Control</h6>
+                    <p>
+                        For any two poses, which are represented as <i>x, y, theta</i> tuples, the actual control input <i>u(t)</i> used to transition between them can be decomposed into three stages: an initial rotation, followed by a translation, and finally another rotation. The equation and schematic are shown below, taken from the lecture slides:<br>
+                        <img src="images/portfolio/lab10/compute_control.png" alt="" style="width: 70%; height: 50%"><br><br>
+
+                        The implementation of the function is as follows.
+                        <script src="https://gist.github.com/kx-74/fc7ef14ea7bff188910c11fb6160843f.js"></script><br><br>
+                    </p>
+
+                    <h6>Odometry Motion Model</h6>
+                    <p>
+                        The odometry model calculates the likelihood of the robot ending up in the current state <i>cur_pose</i>, with a given control input <i>u</i> applied to the previous state <i>prev_pose</i>. To calculate the probability, a Gaussian function was employed to model noise. The rotations and transformations were assumed to be independent events, so that the overall probability of the robot's motion could be obtained by simply multiplying the three terms together, as demonstrated in the formula and the code implementation below.<br>
+                        <img src="images/portfolio/lab10/odem_prob.png" alt="" style="width: 60%; height: 50%"><br><br>
+                        <script src="https://gist.github.com/kx-74/6e5deed4e0755bb34ed1c2baddb50819.js"></script><br><br>
+                    </p>
+
+                    <h6>Prediction</h6>
+                    <p>
+                        <img src="images/portfolio/lab10/prediction.png" alt="" style="width: 40%; height: 50%"><br><br>
+
+                        In this step, the probability of the robot to end up in every possible state, given its previous state and control input, is determined. Therefore, this function requires two sets of loops, each containing three for loops, to iterate over the <i>x, y</i> and <i>theta</i> dimensions of the previous state and the current state, respectively. Given that the grid of <i>x*y*theta</i> has 12×9×18 = 1944 possible states, an approximation was used to shorten the computation time. This means that if a state has a probability less than 0.0001, it can be skipped as it doesn't contribute significantly to the belief. Finally, the belief matrix was normalized to ensure that the probabilities of all states sum up to 1.<br>
+                        <script src="https://gist.github.com/kx-74/c5fda9a14d013e8801e0b6bcd0dc1497.js"></script><br><br>
+                    </p>
+                </p>
+
+                <h5>Update Step</h5>
+                <p>
+                    In the update step, sensor readings are used to reduce uncertainty and figure out the robot position more accurately.
+
+                    <h6>Sensor Model</h6>
+                    <p>
+                        This function calculates the probability that the sensor observations match the true observations for a specific pose, denoted as <i>P(z_t|x_t)</i>. It outputs an 18-element array as the robot rotates in a circle to obtain 18 individual measurements, and each measurement corresponds to a calculated probability based on the observed and true values. Same as the Odometry Model, this function also employs a Gaussian function to model the probability distribution.<br>
+                        <script src="https://gist.github.com/kx-74/7d1f90f091b4f79712057f413e6771c6.js"></script><br><br>
+                    </p>
+
+                    <h6>Update</h6>
+                    <p>
+                        <img src="images/portfolio/lab10/update.png" alt="" style="width: 30%; height: 50%"><br><br>
+
+                        In this step, the estimated belief from the prediction step is adjusted based on the sensor readings. Each belief in <i>bel_bar</i> is multiplied by the probability of obataining the current sensor readings corresponding to the specific grid. This results in an updated <i>bel</i> array, which is then normalized in the end.<br>
+                        <script src="https://gist.github.com/kx-74/88c60cf2a7c92174118a2cd48611d823.js"></script><br><br>
+                    </p>
+                </p>
+            
+            <h4>Results</h4>
+            <p>
+                The following video demonstrates the localization result of the implemented Bayes filter along the sample trajectory. The simulation platform at top right displays the robot's actions throughout the trajectory, while the plot below shows the map bounds in white, the odometry info in red, the groung truth of the robot's position in green, and the belief in blue. On the left side is the log of the computation process.<br>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/Yfd8IDqLkS0?si=qchR47RlfOhzdEZ0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </p>
+
+            <h4>Discussion & Conclusion</h4>
+            <p>
+                The Bayes Filter algorithm is really handy for estimating locations using often noisy inputs through statistics and calculations. This simulation lab has provided me with an understanding of this fascinating algorithm, which will be useful for the next lab where I will be locating the robot in the real world. Big thanks to Jonathan and the TAs' clear explanations, as well as Weizhe's implementation example, which helped me fully understand and apply the algorithm.
+            </p>
+            
+            <h4>References</h4>
+            <p>
+                <a href="https://fastrobotscornell.github.io/FastRobots/labs/Lab10.html">Lab tutorials</a><br>
+                <a href="https://fastrobotscornell.github.io/FastRobots/lectures/FastRobots-17-Motion_models.pdf">Lecture Slides: Motion Models</a><br>
+                <a href="https://wz333.github.io/ECE-5160-website/">Bayes Filter Implementation by Weizhe Zhao</a><br>
+            </p>
+        </div>
+      </div>
+    </div>
+ 	</body>
+</html>
