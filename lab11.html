@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+
+<!--
+ // WEBSITE: https://themefisher.com
+ // TWITTER: https://twitter.com/themefisher
+ // FACEBOOK: https://www.facebook.com/themefisher
+ // GITHUB: https://github.com/themefisher/
+-->
+
+<html class="no-js">
+    <head>
+        <!-- Basic Page Needs
+        ================================================== -->
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="icon" href="favicon.ico">
+        <title>Fast Robots | Lab 11</title>
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="author" content="">
+        <!-- Mobile Specific Metas
+        ================================================== -->
+        <meta name="format-detection" content="telephone=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        
+        <!-- Template CSS Files
+        ================================================== -->
+        <!-- Twitter Bootstrs CSS -->
+        <link rel="stylesheet" href="plugins/bootstrap/bootstrap.min.css">
+        <!-- Ionicons Fonts Css -->
+        <link rel="stylesheet" href="plugins/ionicons/ionicons.min.css">
+        <!-- animate css -->
+        <link rel="stylesheet" href="plugins/animate-css/animate.css">
+        <!-- Hero area slider css-->
+        <link rel="stylesheet" href="plugins/slider/slider.css">
+        <!-- slick slider -->
+        <link rel="stylesheet" href="plugins/slick/slick.css">
+        <!-- Fancybox -->
+        <link rel="stylesheet" href="plugins/facncybox/jquery.fancybox.css">
+        <!-- hover -->
+        <link rel="stylesheet" href="plugins/hover/hover-min.css">
+        <!-- template main css file -->
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body><!--
+    ==================================================
+    Header Section Start
+    ================================================== -->
+    <section class="top-bar animated-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                        <a class="navbar-brand" href="index.html">
+                            <!-- <img class="logo" src="./images/logo.jpg" alt="logo"> -->
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+    
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html">Home
+                                        <span class="sr-only">(current)</span>
+                                    </a>
+                                </li>
+                                <!-- <li class="nav-item">
+                                    <a class="nav-link" href="about.html">About</a>
+                                </li> -->
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!--
+==================================================
+Global Page Section Start
+================================================== -->
+<section class="global-page-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="block">
+          <h2>Lab 11: Localization (Real)</h2>
+          <div class="portfolio-meta">
+            <span>Apr 24, 2024</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--/#Page header-->
+
+<!-- work details part start -->
+<section class="work-single">
+    <div class="container">
+    <!-- <div class="row mb-4 mx-4 p-5 align-items-center"> -->
+      <div class="col-lg-9">
+        <!-- work single Content -->
+        <div class="work-single-content">
+            <h4>Objective</h4>
+            <p>
+                The aim of this lab is to take the theory from Lab 10 and perform localization with the Bayes filter on the actual robot, using only the update step.
+            </p>
+
+            <h4>Lab Tasks</h4>
+                <h5>Test Localization in Simulation</h5>
+                <p>
+                    First, the implementation of the Bayes filter for the virtual robot in Lab 10 was reviewed. The figure below shows the map bounds in white, the ground truth of the robot's position throughout the given trajectory in green, and the belief obtained with the Bayes filter in blue.<br>
+                    <img src="images/portfolio/lab11/sim.png" alt="" style="width: 70%; height: 50%"><br><br>
+                </p>
+
+                <h5>Localization on Real Robot</h5>
+                <p>
+                    This lab currently does not involve trajectory localization, but instead focuses on placing the robot at a specific point on the map and attempting to localize its position. Since there is no reliable odometry data available for the real robot's movement, the prediction step of the Bayes Filter is omitted. Instead, a uniform prior on the pose is used, and only the update step is executed using the sensor measurement data.<br><br>
+
+                    A class named <i>RealRobot()</i> is created to communicate with the real robot and obtain sensor readings. More specifically, the member function <i>perform_observation_loop()</i> is called to get 18 ToF sensor readings as the robot completes a 360-degree rotation, which are stored and used in the update step. The implementation is shown below.<br>
+                    <script src="https://gist.github.com/kx-74/9bda2a09ff914a6c42f2ea540d49c3d3.js"></script><br>
+
+                    Some codes from Lab 9 (Mapping) were reused. In the <i>perform_observation_loop()</i> function, the <i>START_MAPPING</i> command is sent via Bluetooth connection, instructing the robot to perform 18 in-place rotations with PID orientation control, each rotation being 20 degrees. The corresponding IMU and ToF sensor readings are recorded and sent back to the laptop end, where they are captured by the notification handler and stored in respective arrays.<br><br>
+
+                    To wait for the robot to complete its rotation and send the data, the <i>asyncio</i> library is used. The <i>async</i> keyword is added before the function definition to enable the use of the <i>asyncio.sleep()</i> function, and the <i>await</i> keyword is added when calling this async coroutine. Additionally, the localization results were quite inaccurate initially, and later investigation revealed that it was because the robot was implemented to rotate clockwise, while the mapper provided reference distances in counterclockwise order. Therefore, in the <i>perform_observation_loop()</i> function, the order of sensor data stored in the list was adjusted to ensure consistency.<br><br>
+                </p>
+            
+            <h4>Results</h4>
+            <p>
+                The robot was placed in four marked poses on the map and the update step of the Bayes filter was run to localize it. The results are shown below, where ground truth of the robot's position is plotted in green and the localization belief in blue.<br><br>
+
+                <b>Pose (-3 ft, -2 ft, 0 deg) | (-0.91 m, -0.6 m, 0 deg)</b><br>
+                <img src="images/portfolio/lab11/3rd_gt.png" alt="" style="width: 70%; height: 50%"><br>
+                <img src="images/portfolio/lab11/3rd_bel.png" alt="" style="width: 70%; height: 50%"><br>
+                <img src="images/portfolio/lab11/3rd_prob.png" alt="" style="width: 70%; height: 50%"><br><br>
+
+                <b>Pose (0 ft, 3 ft, 0 deg) | (0 m, 0.91 m, 0 deg)</b><br>
+                <img src="images/portfolio/lab11/2nd_gt.png" alt="" style="width: 70%; height: 50%"><br>
+                <img src="images/portfolio/lab11/2nd_bel.png" alt="" style="width: 70%; height: 50%"><br>
+                <img src="images/portfolio/lab11/2nd_prob.png" alt="" style="width: 70%; height: 50%"><br><br>
+
+                <b>Pose (5 ft, -3 ft, 0 deg) | (1.52 m, -0.91 m, 0 deg)</b><br>
+                <img src="images/portfolio/lab11/4th_gt.png" alt="" style="width: 70%; height: 50%"><br>
+                <img src="images/portfolio/lab11/4th_bel.png" alt="" style="width: 70%; height: 50%"><br>
+                <img src="images/portfolio/lab11/4th_prob.png" alt="" style="width: 70%; height: 50%"><br><br>
+
+                <b>Pose (5 ft, 3 ft, 0 deg) | (1.52 m, 0.91 m, 0 deg)</b><br>
+                <img src="images/portfolio/lab11/1st_gt.png" alt="" style="width: 70%; height: 50%"><br>
+                <img src="images/portfolio/lab11/1st_bel.png" alt="" style="width: 70%; height: 50%"><br>
+                <img src="images/portfolio/lab11/1st_prob.png" alt="" style="width: 70%; height: 50%"><br><br>
+
+                For each pose, the first image shows the ground truth position. The second image simultaneously displays the ground truth and belief positions, where in the first three poses, they perfectly overlap, so the belief covers the ground truth. The third image shows the precise value of the belief as well as the probability.
+            </p>
+
+            <h4>Discussion & Conclusion</h4>
+            <p>
+                The localization results were all very accurate, except for the one at Pose (5 ft, 3 ft, 0 deg), where the belief is off by one grid from the ground truth. This is probably because of the symmetry of the environment around that location, which might cause confusion for estimation, as the two locations share similarToF readings.<br><br>
+                
+                This lab shifted the application of the Bayes filter from virtual simulation to the real world. Therefore, adjustments are required to accommodate real-world conditions, including omitting the prediction step, only performing the update step and integrating the filter code with real robot interaction. This experience significantly deepened my understanding of the Bayes filter.<br><br>
+            </p>
+            
+            <h4>References</h4>
+            <p>
+                <a href="https://fastrobotscornell.github.io/FastRobots/labs/Lab11.html">Lab tutorials</a><br>
+                <a href="https://fastrobotscornell.github.io/FastRobots/lectures/FastRobots-19-Markov_BayesFilter2.pdf">Lecture Slides: Bayes Filter</a><br>
+                <a href=""></a><br>
+            </p>
+        </div>
+      </div>
+    </div>
+ 	</body>
+</html>
