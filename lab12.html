@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<!--
+ // WEBSITE: https://themefisher.com
+ // TWITTER: https://twitter.com/themefisher
+ // FACEBOOK: https://www.facebook.com/themefisher
+ // GITHUB: https://github.com/themefisher/
+-->
+
+<html class="no-js">
+    <head>
+        <!-- Basic Page Needs
+        ================================================== -->
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="icon" href="favicon.ico">
+        <title>Fast Robots | Lab 12</title>
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <meta name="author" content="">
+        <!-- Mobile Specific Metas
+        ================================================== -->
+        <meta name="format-detection" content="telephone=no">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        
+        <!-- Template CSS Files
+        ================================================== -->
+        <!-- Twitter Bootstrs CSS -->
+        <link rel="stylesheet" href="plugins/bootstrap/bootstrap.min.css">
+        <!-- Ionicons Fonts Css -->
+        <link rel="stylesheet" href="plugins/ionicons/ionicons.min.css">
+        <!-- animate css -->
+        <link rel="stylesheet" href="plugins/animate-css/animate.css">
+        <!-- Hero area slider css-->
+        <link rel="stylesheet" href="plugins/slider/slider.css">
+        <!-- slick slider -->
+        <link rel="stylesheet" href="plugins/slick/slick.css">
+        <!-- Fancybox -->
+        <link rel="stylesheet" href="plugins/facncybox/jquery.fancybox.css">
+        <!-- hover -->
+        <link rel="stylesheet" href="plugins/hover/hover-min.css">
+        <!-- template main css file -->
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body><!--
+    ==================================================
+    Header Section Start
+    ================================================== -->
+    <section class="top-bar animated-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                        <a class="navbar-brand" href="index.html">
+                            <!-- <img class="logo" src="./images/logo.jpg" alt="logo"> -->
+                        </a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+    
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ml-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="index.html">Home
+                                        <span class="sr-only">(current)</span>
+                                    </a>
+                                </li>
+                                <!-- <li class="nav-item">
+                                    <a class="nav-link" href="about.html">About</a>
+                                </li> -->
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+<!--
+==================================================
+Global Page Section Start
+================================================== -->
+<section class="global-page-header">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="block">
+          <h2>Lab 12: Path Planning and Execution</h2>
+          <div class="portfolio-meta">
+            <span>May 1st, 2024</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--/#Page header-->
+
+<!-- work details part start -->
+<section class="work-single">
+    <div class="container">
+    <!-- <div class="row mb-4 mx-4 p-5 align-items-center"> -->
+      <div class="col-lg-9">
+        <!-- work single Content -->
+        <div class="work-single-content">
+            <h4>Objective</h4>
+            <p>
+                The aim of this lab is to have the robot navigate through a set of waypoints in a specific map as quickly and accurately as possible. The coordinates of the given trajectory and its schematic representation on the map are shown below.<br>
+                <img src="images/portfolio/lab12/trajectory.png" alt="" style="width: 60%; height: 50%"><br><br>
+            </p>
+
+            <h4>Design and Implementation</h4>
+            <p>
+                The lab is intentionally designed to be quite open-ended. An ideal solution could be that the robot performs a localization operation each time it moves from one point on the trajectory to the next. This involves rotating 18 times to complete a 360-degree in-axis turn to obtain ToF readings and using this data to execute the update step of the Bayesian filter, as in Lab 11 Localization (Real). If there is an error between the belief matrix of the robot's status on the map and the waypoint on the trajectory, corresponding actions can be taken to try to bring the robot back on track.<br><br>
+
+                However, it was observed that while my robot has no issues performing localization once and can almost perfectly rotate in place, when it needs to perform localization continuously, the deviation in the rotation accumulates. For example, it may think it has rotated 360 degrees (as indicated by the data from the IMU), but in reality, it has already rotated 540 degrees. In such cases, the collected ToF data becomes meaningless and cannot be used for the Bayesian Filter. The issue may be related to the IMU, particularly with the drift calculation at startup not being effectively corrected, leading to accumulating errors over time. Despite trying all possible solutions, the issue remains unresolved. This means the above mentioned approach is not feasible for my robot as it needs multiple localization operations in one run.<br><br>
+
+                Therefore, a simpler method was chosen, which is to directly integrate the two PID controllers done in the previous labs, hardcode the commands of PID controller for distance and orientation according to the trajectory, and perform open-loop control. The entire process is as shown below, with ToF and IMU PID controllers alternately activated. The orientational control simply involves in-axis rotation, while the position control is achieved by specifying the reference distance to make the robot stop at the same distance from obstacles.<br>
+                <img src="images/portfolio/lab12/pid.png" alt="" style="width: 60%; height: 50%"><br><br>
+
+                <script src="https://gist.github.com/kx-74/22efd6a9b9e398a6078e26c5d0171767.js"></script><br><br>
+
+                The control code sent from the laptop end to the robot is as shown above. Since the PID gain values for ToF and IMU are different, for easier switching between them, a simple function is defined to set Kp, Ki, and Kd as follows:<br>
+                <script src="https://gist.github.com/kx-74/3b93651e1844b00a6e80eba7e42b5938.js"></script><br><br>
+            </p>
+
+            <h4>Results</h4>
+            <p>
+                The gain values of both position and orientation PID controllers are set as shown in the following figure.<br>
+                <img src="images/portfolio/lab12/PID_gain.png" alt="" style="width: 15%; height: 50%"><br><br>
+
+                The actual test results in the map are demonstrated in the video below. Due to the open-loop control method, the robot is unaware of its actual state and may continue to execute operations based on the ideal state, which can further accumulate error. However, as seen in the video, although the robot missed several points, it still roughly followed the trajectory, demonstrating the feasibility of the the basic functionality. It was observed that the main error in the PID occurred during position control when the robot was at a certain angle to the wall, which means the ToF detection was not perpendicular to the obstacle plane. This could be the main reason that the errors are large and the positioning is not so accurate.<br>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/n-6vOhvgLw8?si=i23Oz8R9KJrKHAw5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe><br><br>
+            </p>
+
+            <h4>Discussion & Conclusion</h4>
+            <p>
+                The Fast Robots course concludes here. Over the twelve labs, I have reviewed some tools I have used before, including PID control and IMU sensors, learned some new theoretical knowledge and tried to apply it, such as the Kalman Filter and Bayesian Filter. I also gained experience in planning a project from scratch, considering mechanical layout and system design framework. These experiences are invaluable. Many thanks to the course staff for their help and guidance!<br><br>
+            </p>
+            
+            <h4>References</h4>
+            <p>
+                <a href="https://fastrobotscornell.github.io/FastRobots/labs/Lab12.html">Lab tutorials</a><br>
+                <a href=""></a><br>
+            </p>
+        </div>
+      </div>
+    </div>
+ 	</body>
+</html>
